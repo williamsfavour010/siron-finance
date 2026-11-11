@@ -26,10 +26,16 @@ p { margin: 0 0 1rem; }
 .wrap { width: min(1280px, calc(100% - 96px)); margin-inline: auto; }
 .skip { position: absolute; z-index: 5; padding: .7rem 1rem; background: var(--bg); transform: translateY(-200%); }
 .skip:focus { transform: none; }
+/* Paint ambient light on the full page, so it never stops at a text column. */
+main {
+  background:
+    radial-gradient(ellipse 48rem 30rem at 14% 52rem, #2a604b2e, transparent 100%),
+    radial-gradient(ellipse 40rem 27rem at 86% 64rem, #925c3c19, transparent 100%);
+}
 .masthead { position: sticky; top: 0; z-index: 4; border-bottom: 1px solid var(--border); background: var(--bg); }
 .nav-row { min-height: 74px; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; }
 .brand { display: inline-flex; align-items: center; gap: .65rem; color: var(--ink); text-decoration: none; font-weight: 740; font-size: 1.12rem; white-space: nowrap; }
-.brand-mark { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid #45735e; color: var(--mint); border-radius: 9px; font-size: 1.13rem; }
+.brand-mark { display: block; flex: none; width: 43px; height: 43px; object-fit: contain; }
 .nav-row nav { display: flex; align-items: center; gap: clamp(.8rem, 3vw, 2.5rem); }
 .nav-row nav a, .nav-action { color: var(--muted); text-decoration: none; font-size: .91rem; white-space: nowrap; }
 .nav-row a:hover { color: var(--mint); }
@@ -61,7 +67,12 @@ p { margin: 0 0 1rem; }
 .route-card > span { color: var(--mint); }
 .route-symbol { display: grid; place-items: center; height: 34px; width: 34px; border: 1px solid var(--border); border-radius: 8px; font-size: 1.2rem; line-height: 1; }
 .content-stack { max-width: 1020px; margin-inline: auto; }
-.module { position: relative; padding: 2.7rem 0; border-top: 1px solid var(--border); }
+.module {
+  position: relative;
+  padding: 2.7rem 0;
+  border-top: 1px solid var(--border);
+  border-image: linear-gradient(90deg, transparent, var(--border) 15% 85%, transparent) 1;
+}
 .anchor { position: absolute; top: 0; }
 .disclosure { margin: .65rem 0; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
 .disclosure > summary { display: flex; justify-content: space-between; align-items: center; gap: .9rem; cursor: pointer; list-style: none; padding: 1rem 1.2rem; border-radius: 10px; }
@@ -127,10 +138,6 @@ footer { border-top: 1px solid var(--border); background: #0e1712; padding: 2.6r
     backdrop-filter: blur(16px) saturate(135%);
     box-shadow: inset 0 -1px 0 #d6ffe312;
   }
-  .journey, .content-stack {
-    background: radial-gradient(ellipse at 9% 5rem, #2a604b35, transparent 33rem),
-                radial-gradient(ellipse at 90% 20rem, #925c3c17, transparent 29rem);
-  }
   .route-card {
     background: linear-gradient(145deg, #36584b69, #142019d9 67%);
     -webkit-backdrop-filter: blur(10px);
@@ -147,7 +154,7 @@ footer { border-top: 1px solid var(--border); background: #0e1712; padding: 2.6r
     box-shadow: none;
   }
   .masthead { background: var(--bg); }
-  .journey, .content-stack { background: none; }
+  main { background: none; }
   .route-card, .disclosure { background: var(--surface); }
   .route-card:hover, .result { background: var(--raised); }
 }
@@ -204,6 +211,7 @@ footer { border-top: 1px solid var(--border); background: #0e1712; padding: 2.6r
   .nav-row nav { width: 100%; order: 3; justify-content: space-between; gap: .5rem; }
   .nav-row nav a, .nav-action { font-size: .83rem; }
   .nav-action { padding: .25rem .5rem; }
+  .brand-mark { width: 36px; height: 36px; }
   .hero { min-height: 0; display: block; margin-top: 16px; }
   .hero-image { height: 230px; width: 100%; }
   .hero::after { background: linear-gradient(180deg, #10181300 0, #10181334 100px, #101813 230px); }
