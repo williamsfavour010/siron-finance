@@ -1,4 +1,5 @@
 import { goalPlan, moneyMap, compound, wrappers, fx, housing, insurance, debtComparison } from './math.mjs';
+import { resultHelp } from '../content/result-help.mjs';
 
 // Rendering helpers create text nodes, including for values entered by visitors.
 const node = (tag, text) => Object.assign(document.createElement(tag), { textContent: text });
@@ -6,11 +7,80 @@ const paragraph = text => node('p', text);
 const percent = value => value === null ? '—' : new Intl.NumberFormat('en', { style: 'percent', maximumFractionDigits: 2 }).format(value);
 const amount = (value, currency) => new Intl.NumberFormat('en', { style: 'currency', currency, currencyDisplay: 'code', maximumFractionDigits: 0 }).format(value);
 
+let nextHelpId = 0;
+let activeHelp;
+
+function closeHelp() {
+  if (!activeHelp) return;
+  const { button, description } = activeHelp;
+  button.setAttribute('aria-expanded', 'false');
+  description.hidden = true;
+  activeHelp = undefined;
+}
+
+function addResultHelp(row, term, detail, label) {
+  const button = node('button', '?');
+  button.type = 'button';
+  button.className = 'metric-help';
+  button.setAttribute('aria-label', 'Explain ' + label);
+  button.setAttribute('aria-expanded', 'false');
+  const description = node('span', resultHelp[label]);
+  description.className = 'metric-description';
+  description.id = `metric-description-${++nextHelpId}`;
+  description.hidden = true;
+  button.setAttribute('aria-controls', description.id);
+  button.setAttribute('aria-describedby', description.id);
+  term.append(button);
+  detail.append(description);
+
+  // Hover and keyboard focus preview the explanation. Clicking pins it.
+  function show(pinned = false) {
+    if (activeHelp?.button === button) {
+      activeHelp.pinned ||= pinned;
+      return;
+    }
+    closeHelp();
+    description.hidden = false;
+    button.setAttribute('aria-expanded', 'true');
+    activeHelp = { button, description, pinned };
+  }
+  row.addEventListener('pointerenter', event => {
+    if (event.pointerType === 'mouse' && !activeHelp?.pinned && !document.activeElement?.matches('.metric-help:focus-visible')) show();
+  });
+  row.addEventListener('pointerleave', () => {
+    if (activeHelp?.button === button && !activeHelp.pinned && !button.matches(':focus-visible')) closeHelp();
+  });
+  button.addEventListener('focus', () => {
+    if (button.matches(':focus-visible')) show();
+  });
+  button.addEventListener('blur', () => {
+    if (activeHelp?.button === button) closeHelp();
+  });
+  button.addEventListener('click', () => {
+    if (activeHelp?.button === button && activeHelp.pinned) closeHelp();
+    else show(true);
+  });
+}
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && activeHelp) {
+    event.preventDefault();
+    closeHelp();
+  }
+});
+document.addEventListener('click', event => {
+  if (activeHelp && !activeHelp.button.closest('.metric').contains(event.target)) closeHelp();
+});
+
 function metrics(rows) {
   const list = document.createElement('dl');
   for (const [label, value] of rows) {
     const row = document.createElement('div');
-    row.append(node('dt', label), node('dd', value));
+    row.className = 'metric';
+    const term = node('dt', label);
+    const detail = node('dd', value);
+    row.append(term, detail);
+    if (resultHelp[label]) addResultHelp(row, term, detail, label);
     list.append(row);
   }
   return list;
@@ -24,12 +94,15 @@ function anchor(label, id) {
 
 function render(form, ...children) {
   const result = form.querySelector('.result');
+  if (activeHelp && result.contains(activeHelp.button)) closeHelp();
   result.replaceChildren(...children);
   result.hidden = false;
 }
 
 function hideResult(form) {
-  form.querySelector('.result').hidden = true;
+  const result = form.querySelector('.result');
+  if (activeHelp && result.contains(activeHelp.button)) closeHelp();
+  result.hidden = true;
 }
 
 // A number input is validated by the browser first. This second check prevents
@@ -69,7 +142,7 @@ const calculate = {
   },
   compound(v, money) {
     const r = compound(v);
-    return [metrics([['Projected balance', money(r.total)], ['Total put in', money(r.contributed)], ['Growth after fee', money(r.total-r.contributed)], ['In today’s money', money(r.real)], ['Gap to target', formatGap(v.target - r.real, money)]])];
+    return [metrics([['Projected future balance', money(r.total)], ['Total put in', money(r.contributed)], ['Growth after fee', money(r.total-r.contributed)], ['In today’s money', money(r.real)], ['Gap to target', formatGap(v.target - r.real, money)]])];
   },
   wrappers(v, money) {
     if (v.currency !== 'USD') throw new Error('Use USD for the US Traditional and Roth example.');

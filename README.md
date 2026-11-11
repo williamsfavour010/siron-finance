@@ -11,6 +11,7 @@ Siron Finance is a self-guided financial education site. The public GitHub Pages
 | Country guidance, dated rules and source links | `content/countries.mjs` |
 | Checkup questions, workbook URLs or contribution URL | `content/journey.mjs` |
 | Calculator labels, defaults, limits and assumptions | `content/tools.mjs` |
+| Explanations shown beside calculator results | `content/result-help.mjs` |
 | Calculator formulas | `scripts/math.mjs` |
 | Calculator output, Checkup routing and other interactions | `scripts/app.mjs` |
 | Colors, typography or responsive layout | `assets/site.css` |
