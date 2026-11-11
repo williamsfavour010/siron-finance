@@ -262,6 +262,25 @@ document.addEventListener('click', event => {
 window.addEventListener('hashchange', () => openFragment(location.hash));
 openFragment(location.hash);
 
+// The active link follows the section that has reached the sticky navigation.
+const masthead = document.querySelector('.masthead');
+const navigation = [...masthead.querySelectorAll('nav a')].map(link => ({
+  link,
+  section: document.getElementById(link.hash.slice(1)),
+}));
+let activeNav;
+function updateNavigation() {
+  const boundary = masthead.getBoundingClientRect().bottom + 48;
+  const current = navigation.findLast(({ section }) => section.getBoundingClientRect().top <= boundary) ?? navigation[0];
+  if (current === activeNav) return;
+  activeNav?.link.removeAttribute('aria-current');
+  current.link.setAttribute('aria-current', 'location');
+  activeNav = current;
+}
+window.addEventListener('scroll', updateNavigation, { passive: true });
+window.addEventListener('resize', updateNavigation);
+updateNavigation();
+
 const search = document.querySelector('#lesson-search');
 const articles = [...document.querySelectorAll('[data-article]')];
 document.querySelector('#search-control').hidden = false;
