@@ -147,6 +147,12 @@ legend { color: var(--mint); font-weight: 700; }
 footer { border-top: 1px solid var(--border); background: #0e1712; padding: 2.6rem 0; color: var(--muted); font-size: .9rem; }
 .footer-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
 .footer-inner .brand { margin-bottom: .5rem; }
+.footer-inner .brand, .design-credit {
+  color: var(--gold);
+  text-shadow: 0 0 .8em #e8bd7840;
+}
+.footer-inner .brand:hover, .design-credit strong { color: #f5d49e; }
+.design-credit { margin-bottom: 0; letter-spacing: .025em; }
 
 /* Glass is limited to navigation and cards. Inputs and help stay high contrast. */
 .route-card, .disclosure, .result {
