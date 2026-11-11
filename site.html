@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A practical, self-guided financial decisions lab. Know your number, track your spending, and make a plan you can live with.">
+  <meta name="theme-color" content="#0b110f">
+  <title>Siron Finance</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <script type="module" src="scripts/app.mjs"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="masthead">
+    <div class="wrap nav-row">
+      <a href="#top" class="brand"><span class="brand-mark" aria-hidden="true">◈</span> Siron Finance</a>
+      <nav aria-label="Main navigation">
+        <a href="#start">Start here</a><a href="#tools">Tools</a><a href="#learn">Learn</a><a href="#countries">Countries</a>
+      </nav>
+      <a class="nav-action" href="#checkup">Take the checkup <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+  <main id="main">
+    <div class="wrap">
+      <noscript><p class="note">The guides and workbooks are available below. Enable JavaScript to use the calculators and checkup.</p></noscript>
+      <header class="hero" id="top">
+        <img class="hero-image" src="assets/uli-atrium.webp" alt="" width="1280" height="853" fetchpriority="high">
+        <div class="hero-copy">
+          <p class="eyebrow">THE FINANCIAL DECISIONS LAB</p>
+          <h1>Let’s do the math<br>on our <em>money.</em></h1>
+          <p>What does the life you want cost? Where is your money actually going? Let’s put numbers to both and make a plan you can live with.</p>
+          <div class="hero-actions"><a class="button" href="#checkup">Find where to start <span aria-hidden="true">↗</span></a><a class="text-action" href="#tools">Explore the tools <span aria-hidden="true">→</span></a></div>
+        </div>
+      </header>
+      <section id="start" class="journey" aria-labelledby="start-title">
+        <div class="section-heading"><h2 id="start-title">Three decisions to start with</h2></div>
+        <div class="triptych">
+          <a class="route-card" href="#goal"><span class="route-symbol" aria-hidden="true">◎</span><div><h3>Know your number</h3><p>Put a cost and a date on the life you want.</p></div><span aria-hidden="true">↗</span></a>
+          <a class="route-card" href="#budget"><span class="route-symbol" aria-hidden="true">▤</span><div><h3>Track your spending</h3><p>See what came in, what went out, and what surprised you.</p></div><span aria-hidden="true">↗</span></a>
+          <a class="route-card" href="#plan"><span class="route-symbol" aria-hidden="true">⌁</span><div><h3>Make a plan</h3><p>Compare the trade-offs and decide what to do next.</p></div><span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+      <div class="content-stack">
+        <section id="checkup" class="module" aria-labelledby="checkup-title">
+          <div class="section-heading"><p class="eyebrow">START WITH YOUR SITUATION</p><h2 id="checkup-title">Financial checkup</h2><p>Eight questions to narrow down what deserves your attention. Your answers stay on this page.</p></div>
+          <details class="disclosure"><summary><span><strong>Find my starting points</strong><small>About two minutes. No balances or salary needed.</small></span></summary><div class="detail-body">
+            <!-- INSERT: CHECKUP -->
+          </div></details>
+        </section>
+        <section class="module" id="plan" aria-labelledby="plan-title">
+          <div class="section-heading"><p class="eyebrow">YOUR MONEY PLAN</p><h2 id="plan-title">Work through your own numbers</h2><p>If your income is irregular, use a month you can reasonably count on. If you are between jobs, start with what it costs to get through the next month.</p></div>
+          <!-- INSERT: GOAL -->
+          <!-- INSERT: BUDGET -->
+          <details class="disclosure" id="workbook-downloads"><summary><span><strong>Close the month with the Queens analyst</strong><small>One simulated month, two example workbooks.</small></span></summary>
+            <div class="detail-body">
+              <p>In this simplified month, the analyst brought home $5,900. Essentials went $70 over plan and flexible spending went $160 over, including a $35 renewal. With the other contributions unchanged, that left a $230 shortfall. Check what changed before deciding how much to budget next month.</p>
+              <p>Open the plan and the tracker side by side. Compare the same categories, check the recurring charges, then pick one change for next month. To use a workbook yourself, open it in Google Sheets and use its File menu to download or make a copy if those options are available.</p>
+              <div class="pair"><!-- INSERT: WORKBOOKS --></div>
+            </div>
+          </details>
+          <details class="disclosure" id="next-dollar"><summary><span><strong>Where should the next dollar go?</strong><small>Compare the next moves before you commit.</small></span></summary>
+            <div class="detail-body"><form id="next-form">
+              <div class="field-grid">
+                <label>Can you cover essentials and minimum payments this month?<select name="bills"><option value="yes">Yes</option><option value="no">No or unsure</option></select></label>
+                <label>Do you have a small accessible reserve?<select name="buffer"><option value="yes">Yes</option><option value="no">No or unsure</option></select></label>
+                <label>Do you have high-cost debt?<select name="debt"><option value="yes">Yes</option><option value="no">No</option><option value="unknown">I need to check my rates</option></select></label>
+                <label>Is an employer match available and unclaimed?<select name="match"><option value="yes">Yes</option><option value="no">No or already claimed</option><option value="unknown">I need to check</option></select></label>
+              </div>
+              <div class="form-actions"><button class="button">Compare my options</button></div><div class="result" role="status" aria-live="polite" hidden></div>
+            </form></div>
+          </details>
+        </section>
+        <section class="module" id="tools" aria-labelledby="tools-title">
+          <div class="section-heading"><p class="eyebrow">TRY THE DECISION BEFORE YOU MAKE IT</p><h2 id="tools-title">Compare your options</h2><p>Start with the example. Change one assumption and see whether your decision still holds.</p></div>
+          <!-- INSERT: TOOLS -->
+          <details class="disclosure" id="diligence"><summary><span><strong>Stress-test a private deal</strong><small>Find the questions an attractive return can hide.</small></span></summary>
+            <div class="detail-body"><p>Imagine a friend offers a fixed return on a property project. Start with who owes you the money, what is pledged, and who gets paid before you. Check only what you have independently verified.</p>
+              <form id="diligence-form"><!-- INSERT: DILIGENCE -->
+                <div class="form-actions"><button class="button">Show unanswered questions</button><button class="button secondary" type="reset">Reset</button></div><div class="result" role="status" aria-live="polite" hidden></div>
+              </form>
+              <p class="note">Someone you trust can still offer a deal that is too concentrated, illiquid, or hard to enforce. Run a total-loss case and decide what happens to your other goals.</p>
+            </div>
+          </details>
+        </section>
+        <section class="module" id="learn" aria-labelledby="learn-title">
+          <span id="saving" class="anchor"></span><span id="investing" class="anchor"></span><span id="earning" class="anchor"></span><span id="giving" class="anchor"></span>
+          <div class="section-heading"><p class="eyebrow">LEARN AT YOUR OWN PACE</p><h2 id="learn-title">The field guide</h2><p>Open the decision you are facing. Each guide has a worked example, a next step, and sources you can check.</p></div>
+          <div id="search-control" hidden><label class="search-label">Find a topic <input type="search" id="lesson-search" placeholder="Try dental, bonds, or first paycheck"></label><p id="search-result" role="status" class="note"></p></div>
+          <!-- INSERT: LESSONS -->
+        </section>
+        <section class="module" id="countries" aria-labelledby="country-title">
+          <div class="section-heading"><p class="eyebrow">SEVEN COUNTRY PLAYBOOKS</p><h2 id="country-title">Where the rules change</h2><p>Keep where you live, where you pay tax, your citizenship, where an asset sits, and your goal currency separate. If two countries are involved, check both sets of rules.</p></div>
+          <div class="chips" aria-label="Jump to a country"><!-- INSERT: COUNTRY_LINKS --></div>
+          <!-- INSERT: COUNTRIES -->
+        </section>
+        <section class="module" id="sources" aria-labelledby="sources-title">
+          <div class="section-heading"><h2 id="sources-title">Check the sources</h2><p>Rules and auction rates can change. Look for the effective period and check the linked authority before acting.</p></div>
+          <details class="disclosure"><summary><span><strong>Primary-source library</strong><small>Regulators, tax authorities, consumer agencies and index data.</small></span></summary><div class="detail-body"><!-- INSERT: SOURCES --></div></details>
+          <details class="disclosure"><summary><span><strong>Corrections and updates</strong></span></summary><div class="detail-body"><p>November 2026. The rent-or-buy comparison now validates the down payment and models loan amortization. The country Checkup links to the selected playbook when residence and tax residence match. Country rules display their effective period beside the source.</p><a href="#contribute">Send a correction</a></div></details>
+        </section>
+        <section id="contribute" class="contribute module"><div><h2>Tell me what I missed.</h2><p>If you found an example that would help someone else or a rule that has changed, send it in. You can leave your name off. Please keep other people’s details and financial records out of the form.</p></div><a class="button secondary" href="<!-- INSERT: CONTRIBUTE -->">Suggest a correction or example ↗</a></section>
+      </div>
+    </div>
+  </main>
+  <footer id="about"><div class="wrap footer-inner"><div><a href="#top" class="brand"><span class="brand-mark" aria-hidden="true">◈</span> Siron Finance</a><p>Built by Favour for people figuring out money together.</p></div><div><p>Educational examples. Verify tax, legal, insurance and investment details for your situation. Calculator inputs stay in this page. The workbooks and contribution form open on Google.</p><a href="https://www.si.edu/object/uli-notes%3Anmafa_98-20-1">Design inspiration: Igbo uli linework</a></div></div></footer>
+</body>
+</html>
