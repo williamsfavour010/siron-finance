@@ -9,6 +9,7 @@
   --muted: #a9baae;
   --mint: #a5e4c4;
   --copper: #e5ad83;
+  --gold: #e8bd78;
   --focus: #ffc58f;
   --body: "Instrument Sans", "Segoe UI", sans-serif;
   --display: "Bricolage Grotesque", "Segoe UI", sans-serif;
@@ -39,6 +40,12 @@ main {
 .nav-row nav { display: flex; align-items: center; gap: clamp(.8rem, 3vw, 2.5rem); }
 .nav-row nav a, .nav-action { color: var(--muted); text-decoration: none; font-size: .91rem; white-space: nowrap; }
 .nav-row a:hover { color: var(--mint); }
+.nav-row nav a[aria-current="location"] {
+  color: var(--gold);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: .45em;
+}
 .nav-action { color: var(--mint); border: 1px solid var(--border); padding: .45rem .85rem; border-radius: 6px; }
 .nav-action span { margin-left: .35rem; }
 .hero { position: relative; isolation: isolate; overflow: hidden; margin-top: 35px; min-height: 515px; display: grid; align-items: center; border: 1px solid var(--border); border-radius: 15px; background: #101813; }
@@ -52,6 +59,13 @@ main {
 .hero-actions, .form-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .button { display: inline-flex; gap: .7rem; align-items: center; justify-content: center; text-decoration: none; background: var(--mint); color: #11221a; font-weight: 700; padding: .69rem 1rem; border-radius: 6px; border: 1px solid transparent; cursor: pointer; }
 .button:hover { background: #c4f4da; color: #11221a; }
+.button.accent {
+  color: #2d1f12;
+  background: linear-gradient(135deg, #f5d49e, var(--gold) 65%);
+  border-color: #f5d49e;
+  box-shadow: inset 0 1px 0 #fff5d8aa, 0 4px 18px #e8bd781e;
+}
+.button.accent:hover { background: #f5d49e; color: #2d1f12; }
 .button.secondary { background: transparent; color: var(--mint); border-color: #4a6e5d; }
 .button.secondary:hover { background: var(--raised); }
 .text-action { text-decoration: none; font-weight: 650; font-size: .92rem; }
@@ -66,6 +80,7 @@ main {
 .route-card p { font-size: .9rem; color: var(--muted); margin: 0; }
 .route-card > span { color: var(--mint); }
 .route-symbol { display: grid; place-items: center; height: 34px; width: 34px; border: 1px solid var(--border); border-radius: 8px; font-size: 1.2rem; line-height: 1; }
+.route-card > .route-symbol { color: var(--gold); background: #e8bd7811; border-color: #e8bd784d; }
 .content-stack { max-width: 1020px; margin-inline: auto; }
 .module {
   position: relative;
