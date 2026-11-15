@@ -9,7 +9,7 @@
   <meta http-equiv="Content-Security-Policy" content="form-action 'none'">
   <title>Siron Finance</title>
   <link rel="icon" href="assets/siron-deer.png?v=fire" type="image/png">
-  <link rel="stylesheet" href="assets/site.css?v=quick-estimate">
+  <link rel="stylesheet" href="assets/site.css?v=spending-workbooks">
   <script type="module" src="scripts/app.mjs?v=return-scenarios"></script>
 </head>
 <body>
@@ -72,11 +72,12 @@
         <div class="result" role="status" aria-live="polite" hidden></div>
       </form>
       <ul class="source-links"><li><a href="https://www.investor.gov/financial-tools-calculators/calculators/compound-interest-calculator">Investor.gov compound calculator</a></li></ul>
+      
     </div>
   </details>
-          <details id="budget" class="disclosure calculator"><summary><span><strong>Track your spending</strong><small>Get the cash picture, then do one monthly close.</small></span></summary>
+          <details id="budget" class="disclosure calculator"><summary><span><strong>Track your spending</strong><small>See what’s left this month, then use two example workbooks to compare your plan with what you spent.</small></span></summary>
     <div class="detail-body">
-      <p class="example">Use the simulated Queens analyst as a starting point. Essentials were 70 over plan and flexible spending was 160 over plan, including a 35 renewal. The month came in 230 short. Check the renewal first, then decide which other differences belong in next month’s plan.</p>
+      <p class="example">Start with the example numbers from the Queens analyst’s month, or enter your own. After you calculate, try the worked example below to see how to spot a shortfall and adjust next month’s plan.</p>
       <form data-tool="budget" autocomplete="off" inert>
         <div class="currency-row"><label>Currency<select name="currency"><option selected>USD</option><option>GBP</option><option>NGN</option><option>CAD</option><option>EUR</option><option>GHS</option><option>SEK</option></select></label></div>
         <div class="field-grid"><div class="field"><label>Monthly take-home cash<input type="number" name="net" value="5900" min="0" max="1000000000" step="any" required></label></div><div class="field"><label>Monthly gross cash pay (optional)<input type="number" name="gross" value="8750" min="0" max="1000000000" step="any"></label></div><div class="field"><label>Monthly essentials, excluding debt<input type="number" name="essentials" value="3220" min="0" max="1000000000" step="any" required></label></div><div class="field"><label>Monthly minimum debt payments<input type="number" name="debt" value="250" min="0" max="1000000000" step="any" required></label></div><div class="field"><label>Monthly flexible spending and giving<input type="number" name="flex" value="1010" min="0" max="1000000000" step="any" required></label></div><div class="field"><label>Monthly sinking funds<input type="number" name="sinking" value="450" min="0" max="1000000000" step="any" required></label></div><div class="field"><label>Monthly contributions to savings or investments<input type="number" name="saving" value="1200" min="0" max="1000000000" step="any" required></label></div><div class="field"><label>Accessible emergency cash<input type="number" name="reserve" value="6940" min="0" max="10000000000" step="any" required></label></div><div class="field"><label>Total assets<input type="number" name="assets" value="20000" min="0" max="10000000000" step="any" required></label></div><div class="field"><label>Total debts<input type="number" name="liabilities" value="5800" min="0" max="10000000000" step="any" required></label></div></div>
@@ -86,15 +87,14 @@
         <div class="result" role="status" aria-live="polite" hidden></div>
       </form>
       <ul class="source-links"><li><a href="https://www.consumerfinance.gov/consumer-tools/educator-tools/your-money-your-goals/toolkit/">CFPB budgeting tools</a></li></ul>
+      <section class="monthly-close" id="workbook-downloads" aria-labelledby="monthly-close-title">
+  <h3 id="monthly-close-title">Close the month with the Queens analyst</h3>
+  <p>In this simplified month, the analyst brought home $5,900. Essentials went $70 over plan and flexible spending went $160 over, including a $35 renewal. With the other contributions unchanged, that left a $230 shortfall.</p>
+  <p>Open the plan and the tracker side by side. Compare the same categories, check the recurring charges, then pick one change for next month. To use a workbook yourself, open it in Google Sheets and use its File menu to download or make a copy if those options are available.</p>
+  <div class="pair"><div><h4>Budget Plan</h4><p>Set up the month before it starts. See bills, sinking funds and the balance check.</p><a href="https://docs.google.com/spreadsheets/d/1HZ5oRAuRXGLiZka0oBGBs3Qp3CnhB0Yj/edit">View example workbook ↗</a></div><div><h4>Money Tracker</h4><p>Review actual transactions and close the month against the plan.</p><a href="https://docs.google.com/spreadsheets/d/1t594T6lwqyOv3KySH2DVYlxNZ8AT2GXO/edit">View example workbook ↗</a></div></div>
+</section>
     </div>
   </details>
-          <details class="disclosure" id="workbook-downloads"><summary><span><strong>Close the month with the Queens analyst</strong><small>One simulated month, two example workbooks.</small></span></summary>
-            <div class="detail-body">
-              <p>In this simplified month, the analyst brought home $5,900. Essentials went $70 over plan and flexible spending went $160 over, including a $35 renewal. With the other contributions unchanged, that left a $230 shortfall. Check what changed before deciding how much to budget next month.</p>
-              <p>Open the plan and the tracker side by side. Compare the same categories, check the recurring charges, then pick one change for next month. To use a workbook yourself, open it in Google Sheets and use its File menu to download or make a copy if those options are available.</p>
-              <div class="pair"><div><h3>Budget Plan</h3><p>Set up the month before it starts. See bills, sinking funds and the balance check.</p><a href="https://docs.google.com/spreadsheets/d/1HZ5oRAuRXGLiZka0oBGBs3Qp3CnhB0Yj/edit">View example workbook ↗</a></div><div><h3>Money Tracker</h3><p>Review actual transactions and close the month against the plan.</p><a href="https://docs.google.com/spreadsheets/d/1t594T6lwqyOv3KySH2DVYlxNZ8AT2GXO/edit">View example workbook ↗</a></div></div>
-            </div>
-          </details>
           <details class="disclosure" id="next-dollar"><summary><span><strong>Where should the next dollar go?</strong><small>Compare the next moves before you commit.</small></span></summary>
             <div class="detail-body"><form id="next-form" autocomplete="off" inert>
               <div class="field-grid">
@@ -121,6 +121,7 @@
         <div class="result" role="status" aria-live="polite" hidden></div>
       </form>
       <ul class="source-links"><li><a href="https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins/updated">SEC investment fees bulletin</a></li></ul>
+      
     </div>
   </details>
 <details id="wrappers" class="disclosure calculator"><summary><span><strong>Traditional or Roth?</strong><small>Compare the same pre-tax dollars under two tax assumptions.</small></span></summary>
@@ -135,6 +136,7 @@
         <div class="result" role="status" aria-live="polite" hidden></div>
       </form>
       <ul class="source-links"><li><a href="https://www.irs.gov/newsroom/401k-limit-increases-to-24500-for-2026-ira-limit-increases-to-7500">IRS retirement contribution limits</a></li></ul>
+      
     </div>
   </details>
 <span id="diaspora"></span><details id="fx" class="disclosure calculator"><summary><span><strong>Yield, inflation and FX</strong><small>Compare local purchasing power with the currency your goal uses.</small></span></summary>
@@ -149,6 +151,7 @@
         <div class="result" role="status" aria-live="polite" hidden></div>
       </form>
       <ul class="source-links"><li><a href="https://www.cbn.gov.ng/rates/exchratebycurrency.html">Central Bank of Nigeria FX reference</a></li><li><a href="https://remittanceprices.worldbank.org/">World Bank remittance prices</a></li></ul>
+      
     </div>
   </details>
 <details id="housing" class="disclosure calculator"><summary><span><strong>Rent, buy or rent out a room</strong><small>Compare monthly cash flow and wealth at the same exit date.</small></span></summary>
@@ -163,6 +166,7 @@
         <div class="result" role="status" aria-live="polite" hidden></div>
       </form>
       <ul class="source-links"><li><a href="https://www.consumerfinance.gov/owning-a-home/loan-estimate/">CFPB Loan Estimate explainer</a></li></ul>
+      
     </div>
   </details>
 <details id="insurance" class="disclosure calculator"><summary><span><strong>Compare health plans</strong><small>See what low, medium and high use would actually cost.</small></span></summary>
@@ -177,6 +181,7 @@
         <div class="result" role="status" aria-live="polite" hidden></div>
       </form>
       <ul class="source-links"><li><a href="https://www.healthcare.gov/choose-a-plan/your-total-costs/">HealthCare.gov annual cost guide</a></li></ul>
+      
     </div>
   </details>
 <details id="debt" class="disclosure calculator"><summary><span><strong>Pay down debt or invest?</strong><small>Compare two uses of the same cash with a fixed repayment schedule.</small></span></summary>
@@ -191,6 +196,7 @@
         <div class="result" role="status" aria-live="polite" hidden></div>
       </form>
       <ul class="source-links"><li><a href="https://www.consumerfinance.gov/ask-cfpb/how-does-paying-down-a-mortgage-work-en-1943/">CFPB on paying down principal</a></li></ul>
+      
     </div>
   </details>
           <details class="disclosure" id="diligence"><summary><span><strong>Stress-test a private deal</strong><small>Find the questions an attractive return can hide.</small></span></summary>

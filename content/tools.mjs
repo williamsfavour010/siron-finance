@@ -25,8 +25,8 @@ export const tools = [
     sources: [['Investor.gov compound calculator','https://www.investor.gov/financial-tools-calculators/calculators/compound-interest-calculator']],
   },
   {
-    id: 'budget', title: 'Track your spending', summary: 'Get the cash picture, then do one monthly close.',
-    example: 'Use the simulated Queens analyst as a starting point. Essentials were 70 over plan and flexible spending was 160 over plan, including a 35 renewal. The month came in 230 short. Check the renewal first, then decide which other differences belong in next month’s plan.',
+    id: 'budget', title: 'Track your spending', summary: 'See what’s left this month, then use two example workbooks to compare your plan with what you spent.',
+    example: 'Start with the example numbers from the Queens analyst’s month, or enter your own. After you calculate, try the worked example below to see how to spot a shortfall and adjust next month’s plan.',
     note: 'Enter recurring take-home cash. Review bonuses and vested shares separately. Enter minimum debt payments once, outside essentials. For a foreign-currency goal, convert amounts into one currency before combining them.',
     fields: [
       ['net','Monthly take-home cash',5900,0,1e9], ['gross','Monthly gross cash pay (optional)',8750,0,1e9],
