@@ -132,11 +132,15 @@ const calculate = {
     if (v.years < 1) throw new Error('Choose an age for work to become optional that is later than your current age.');
     if (v.endAge <= v.stopAge) throw new Error('Choose a later age for how long you want your money to last.');
     const base = goalPlan(v);
-    const lower = goalPlan({ ...v, returnRate: v.returnRate - 2 });
-    const upper = goalPlan({ ...v, returnRate: v.returnRate + 2 });
+    const lowerRate = v.returnRate - 2;
+    const higherRate = v.returnRate + 2;
+    const lower = goalPlan({ ...v, returnRate: lowerRate });
+    const upper = goalPlan({ ...v, returnRate: higherRate });
+    const annualReturn = rate => percent(rate / 100);
     return [
       metrics([['Target balance', money(base.target)], ['Projected balance', money(base.projected)], ['Monthly contribution needed', money(base.required)], ['Gap to target', formatGap(base.gap, money)], ['Net annual return after inflation', percent(base.realReturn)], ['Years of spending modeled', base.drawYears]]),
-      paragraph(`Monthly contribution under the lower return: ${money(lower.required)}. Under the higher return: ${money(upper.required)}. A steady return also hides the risk of bad years early in retirement.`),
+      paragraph(`The main estimate assumes a ${annualReturn(v.returnRate)} annual investment return before fees and inflation. If investments return ${annualReturn(lowerRate)} a year, you’d need to save ${money(lower.required)} per month. At ${annualReturn(higherRate)} a year, you’d need ${money(upper.required)} per month.`),
+      paragraph('These scenarios assume steady returns. Bad years early in retirement can change how long your money lasts.'),
       anchor('Check your monthly contribution against actual spending →', 'budget'),
     ];
   },
