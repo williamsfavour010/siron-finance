@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { compound, debtComparison, futureValue, fx, goalPlan, housing, insurance, moneyMap, presentValue, wrappers } from '../scripts/math.mjs';
+import { debtComparison, futureValue, fx, goalPlan, healthSwitchPoints, homePriceAtMonthlyBudget, housing, insurance, moneyMap, monthlyPlan, presentValue, wrappers } from '../scripts/math.mjs';
 import { countries } from '../content/countries.mjs';
 
 const close = (actual, expected, tolerance = .01) => assert.ok(Math.abs(actual - expected) < tolerance, `${actual} should be close to ${expected}`);
@@ -26,12 +26,15 @@ test('Queens month reconciles to a 230 shortfall', () => {
   close(result.netWorth, 14200);
 });
 
-test('compound model uses an effective annual return and separates inflation', () => {
-  const result = compound({ start:1000, monthly:0, match:0, years:10, rate:7, fee:0, inflation:3 });
-  close(result.total, 1967.151357);
-  close(result.real, 1000 * (1.07 / 1.03) ** 10);
+test('Traditional and Roth are equivalent at the same tax rate', () => {
   const equal = wrappers({ amount:10000, now:22, later:22, rate:7, years:30 });
   close(equal.traditional, equal.roth);
+});
+
+test('monthly plan only assigns cash that is available', () => {
+  assert.deepEqual(monthlyPlan(300,100,50), { gap:200, canAdd:50, shortfall:150 });
+  assert.deepEqual(monthlyPlan(300,100,-50), { gap:200, canAdd:0, shortfall:200 });
+  assert.deepEqual(monthlyPlan(300,350,50), { gap:0, canAdd:0, shortfall:0 });
 });
 
 test('currency depreciation can reverse local gains', () => {
@@ -49,12 +52,22 @@ test('mortgage payments stop at term and 100% cash purchase has zero payment', (
   close(result.equity, 120000);
   close(result.renterPortfolio, 120000);
   close(housing({ ...input, down:100 }).payment, 0);
+  close(homePriceAtMonthlyBudget({ ...input, housingBudget:1000 },500), 18000);
 });
 
 test('insurance counts premiums and uncovered expenses outside the covered limit', () => {
   const plan = { premium:100, deductible:500, coinsurance:20, maximum:1000, copays:0, uncovered:200 };
   assert.deepEqual(insurance(plan, 10000), { cost:2400, coveredCeiling:2200 });
   close(insurance(plan, 750).cost, 1950);
+});
+
+test('health comparison finds the bill amount where the cheaper plan changes', () => {
+  const a = { premium:140, deductible:2500, coinsurance:20, maximum:6500, copays:0, uncovered:0 };
+  const b = { premium:260, deductible:750, coinsurance:15, maximum:3800, copays:0, uncovered:0 };
+  const [crossing] = healthSwitchPoints(a,b);
+  close(crossing, 2444.12);
+  close(insurance(a,crossing).cost, insurance(b,crossing).cost);
+  assert.deepEqual(healthSwitchPoints(a,a), []);
 });
 
 test('debt follows the repayment schedule and flags a cash floor breach', () => {
@@ -64,6 +77,7 @@ test('debt follows the repayment schedule and flags a cash floor breach', () => 
   assert.equal(result.invest.paidAt, 12);
   assert.equal(result.belowFloor, true);
   close(result.invest.net, result.prepay.net);
+  assert.equal(debtComparison({ ...input, extra:100 }).prepay.paidAt, 3);
   assert.throws(() => debtComparison({ ...input, apr:100, payment:90 }));
 });
 
@@ -72,7 +86,7 @@ test('generated site retains all public anchors and links each country rule', as
   const ids = [...page.matchAll(/ id="([^"]+)"/g)].map(match => match[1]);
   assert.equal(new Set(ids).size, ids.length);
   for (const [, id] of page.matchAll(/href="#([^"]+)"/g)) assert.ok(ids.includes(id), `Missing fragment: ${id}`);
-  for (const id of ['start','checkup','budget','saving','investing','countries','diaspora','housing','earning','giving','insurance','tools','contribute','about','workbook-downloads']) assert.ok(ids.includes(id));
+  for (const id of ['start','checkup','budget','goal','next-dollar','countries','housing','debt','insurance','fx','wrappers','tools','contribute','about','workbook-downloads']) assert.ok(ids.includes(id));
   for (const country of Object.values(countries)) {
     assert.ok(country.sources.length && country.rules.length);
     for (const rule of country.rules) assert.ok(rule.label && rule.value && rule.period && rule.url.startsWith('https://'));

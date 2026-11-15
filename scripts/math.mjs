@@ -36,10 +36,11 @@ export function moneyMap(v) {
   };
 }
 
-export function compound(v) {
-  const annual = (1 + v.rate / 100) * (1 - v.fee / 100) - 1;
-  const total = futureValue(v.start, v.monthly + v.match, monthlyRate(annual), v.years * 12);
-  return { total, contributed: v.start + (v.monthly + v.match) * v.years * 12, real: total / (1 + v.inflation / 100) ** v.years };
+export function monthlyPlan(target, already, left) {
+  const gap = Math.max(0, target - already);
+  const available = Math.max(0, left);
+  const canAdd = Math.min(gap, available);
+  return { gap, canAdd, shortfall: gap - canAdd };
 }
 
 export function wrappers(v) {
@@ -51,6 +52,33 @@ export function insurance(plan, claims) {
   const deductible = Math.min(plan.deductible, claims);
   const coveredCost = Math.min(plan.maximum, deductible + (claims - deductible) * plan.coinsurance / 100 + plan.copays);
   return { cost: 12 * plan.premium + coveredCost + plan.uncovered, coveredCeiling: 12 * plan.premium + plan.maximum };
+}
+
+// Each plan's cost is linear between its deductible and its spending cap.
+export function healthSwitchPoints(a, b) {
+  const breaks = new Set([0]);
+  for (const plan of [a,b]) {
+    const cap = Math.max(0, plan.maximum - plan.copays);
+    breaks.add(Math.min(plan.deductible, cap));
+    if (plan.coinsurance > 0 && cap > plan.deductible) {
+      breaks.add(plan.deductible + (cap - plan.deductible) * 100 / plan.coinsurance);
+    }
+  }
+  const points = [...breaks].sort((x,y) => x-y);
+  const difference = claims => insurance(a, claims).cost - insurance(b, claims).cost;
+  const crossings = [];
+  let previousNonzero;
+  for (const [index, claims] of points.entries()) {
+    const cost = difference(claims);
+    if (Math.abs(cost) < 1e-8) continue;
+    if (previousNonzero && Math.sign(cost) !== Math.sign(previousNonzero.cost)) {
+      const low = points[index - 1];
+      const lowCost = difference(low);
+      crossings.push(low - lowCost * (claims - low) / (cost - lowCost));
+    }
+    previousNonzero = { cost };
+  }
+  return crossings;
 }
 
 // FX inputs quote units of goal currency per one unit of investment currency.
@@ -92,7 +120,15 @@ export function housing(v) {
     result = { equity, ownerPortfolio, renterPortfolio, advantage: equity + ownerPortfolio - renterPortfolio };
     if (month % 12 === 0 && result.advantage >= 0 && firstBreakEven === null) firstBreakEven = month / 12;
   }
-  return { ...result, cashToClose, payment, outlay, firstBreakEven };
+  return { ...result, cashToClose, payment, outlay, roomIncome, firstBreakEven };
+}
+
+export function homePriceAtMonthlyBudget(v, roomIncome) {
+  const borrowedShare = 1 - v.down / 100;
+  const perUnit = borrowedShare / presentValue(1, v.apr / 1200, v.term * 12) + v.maintenance / 1200;
+  const forLoanAndRepairs = v.housingBudget + roomIncome - v.tax - v.insurance - v.hoa;
+  if (forLoanAndRepairs < 0) return 0;
+  return perUnit > 0 ? forLoanAndRepairs / perUnit : null;
 }
 
 export function debtComparison(v) {
@@ -101,19 +137,21 @@ export function debtComparison(v) {
   const rate = v.apr / 1200;
   if (v.balance > 0 && v.payment <= v.balance * rate) throw new Error('The monthly payment must cover more than the first month’s interest.');
   const growth = monthlyRate(v.invest / 100);
-  function run(balance, portfolio) {
+  const extra = v.extra ?? 0;
+  const monthlyCash = v.payment + extra;
+  function run(balance, portfolio, scheduledPayment) {
     let interest = 0, paidAt = balance === 0 ? 0 : null;
     for (let month = 1; month <= v.years * 12; month++) {
       const charge = balance * rate;
-      const paid = Math.min(v.payment, balance + charge);
+      const paid = Math.min(scheduledPayment, balance + charge);
       interest += charge;
       balance = Math.max(0, balance + charge - paid);
-      portfolio = portfolio * (1 + growth) + v.payment - paid;
+      portfolio = portfolio * (1 + growth) + monthlyCash - paid;
       if (balance < 0.000001 && paidAt === null) paidAt = month;
     }
     return { interest, paidAt, net: portfolio - balance };
   }
-  const prepay = run(v.balance - v.lump, 0);
-  const invest = run(v.balance, v.lump);
+  const prepay = run(v.balance - v.lump, 0, monthlyCash);
+  const invest = run(v.balance, v.lump, v.payment);
   return { prepay, invest, cashLeft: v.cash - v.lump, belowFloor: v.cash - v.lump < v.floor };
 }
