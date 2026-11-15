@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { debtComparison, futureValue, fx, goalPlan, healthSwitchPoints, homePriceAtMonthlyBudget, housing, insurance, moneyMap, monthlyPlan, presentValue, wrappers } from '../scripts/math.mjs';
 import { countries } from '../content/countries.mjs';
+import { tools } from '../content/tools.mjs';
 
 const close = (actual, expected, tolerance = .01) => assert.ok(Math.abs(actual - expected) < tolerance, `${actual} should be close to ${expected}`);
 
@@ -87,6 +88,13 @@ test('generated site retains all public anchors and links each country rule', as
   assert.equal(new Set(ids).size, ids.length);
   for (const [, id] of page.matchAll(/href="#([^"]+)"/g)) assert.ok(ids.includes(id), `Missing fragment: ${id}`);
   for (const id of ['start','checkup','budget','goal','next-dollar','countries','housing','debt','insurance','fx','wrappers','tools','contribute','about','workbook-downloads']) assert.ok(ids.includes(id));
+  for (const tool of tools) {
+    const fields = [...tool.fields, ...(tool.advancedFields ?? []), ...(tool.planFields ?? []).flatMap(([, fields]) => fields)];
+    for (const [id,,,,,step='any',hint] of fields) {
+      assert.ok(step === 'any' || Number(step) > 0, `Invalid step for ${tool.id}/${id}`);
+      if (hint) assert.ok(ids.includes(`${tool.id}-hint-${id}`), `Missing field help for ${tool.id}/${id}`);
+    }
+  }
   for (const country of Object.values(countries)) {
     assert.ok(country.sources.length && country.rules.length);
     for (const rule of country.rules) assert.ok(rule.label && rule.value && rule.period && rule.url.startsWith('https://'));

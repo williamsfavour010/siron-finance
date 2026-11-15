@@ -97,8 +97,9 @@
     
   </div><div class="field">
     <label for="goal-field-phaseCost">Extra spending per year right after work</label>
-    <input type="number" id="goal-field-phaseCost" name="phaseCost" value="0" min="0" max="10000000000" step="Think childcare, family support, or other temporary expenses." required>
-    
+    <input type="number" id="goal-field-phaseCost" name="phaseCost" value="0" min="0" max="10000000000" step="any" required aria-describedby="goal-hint-phaseCost">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="goal-hint-phaseCost" aria-describedby="goal-hint-phaseCost" aria-label="Explain Extra spending per year right after work">?</button>
+    <small id="goal-hint-phaseCost" class="metric-description" hidden>Think childcare, family support, or other temporary expenses.</small>
   </div><div class="field">
     <label for="goal-field-phaseYears">How many years will those extra costs last?</label>
     <input type="number" id="goal-field-phaseYears" name="phaseYears" value="0" min="0" max="100" step="1" required>
@@ -221,8 +222,9 @@
     
   </div><div class="field">
     <label for="housing-field-down">How much of the price will you pay upfront? (%)</label>
-    <input type="number" id="housing-field-down" name="down" value="20" min="0" max="100" step="Down payment. This is the share you pay in cash before borrowing. Closing costs are separate." required>
-    
+    <input type="number" id="housing-field-down" name="down" value="20" min="0" max="100" step="any" required aria-describedby="housing-hint-down">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="housing-hint-down" aria-describedby="housing-hint-down" aria-label="Explain How much of the price will you pay upfront? (%)">?</button>
+    <small id="housing-hint-down" class="metric-description" hidden>Down payment. This is the share you pay in cash before borrowing. Closing costs are separate.</small>
   </div><div class="field">
     <label for="housing-field-years">How many years would you stay?</label>
     <input type="number" id="housing-field-years" name="years" value="7" min="1" max="60" step="1" required>
@@ -241,16 +243,18 @@
         <details class="advanced" data-advanced><summary>Add more details</summary>
           <fieldset disabled aria-label="Advanced assumptions"><div class="field-grid"><div class="field">
     <label for="housing-field-apr">What yearly rate does the lender quote? (%)</label>
-    <input type="number" id="housing-field-apr" name="apr" value="6.5" min="0" max="35" step="Use the mortgage interest rate for the payment calculation. APR can include fees." required>
-    
+    <input type="number" id="housing-field-apr" name="apr" value="6.5" min="0" max="35" step="any" required aria-describedby="housing-hint-apr">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="housing-hint-apr" aria-describedby="housing-hint-apr" aria-label="Explain What yearly rate does the lender quote? (%)">?</button>
+    <small id="housing-hint-apr" class="metric-description" hidden>Use the mortgage interest rate for the payment calculation. APR can include fees.</small>
   </div><div class="field">
     <label for="housing-field-term">How many years is the home loan?</label>
     <input type="number" id="housing-field-term" name="term" value="30" min="1" max="50" step="1" required>
     
   </div><div class="field">
     <label for="housing-field-closing">What will you pay in fees to buy?</label>
-    <input type="number" id="housing-field-closing" name="closing" value="10500" min="0" max="1000000000" step="Closing costs are separate from your down payment. Replace this example with your lender’s estimate." required>
-    
+    <input type="number" id="housing-field-closing" name="closing" value="10500" min="0" max="1000000000" step="any" required aria-describedby="housing-hint-closing">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="housing-hint-closing" aria-describedby="housing-hint-closing" aria-label="Explain What will you pay in fees to buy?">?</button>
+    <small id="housing-hint-closing" class="metric-description" hidden>Closing costs are separate from your down payment. Replace this example with your lender’s estimate.</small>
   </div><div class="field">
     <label for="housing-field-saleFee">How much of the sale price goes to selling costs? (%)</label>
     <input type="number" id="housing-field-saleFee" name="saleFee" value="6" min="0" max="100" step="any" required>
@@ -273,28 +277,32 @@
     
   </div><div class="field">
     <label for="housing-field-vacancy">How often might the rooms sit empty? (%)</label>
-    <input type="number" id="housing-field-vacancy" name="vacancy" value="10" min="0" max="100" step="Vacancy rate. Enter 100% to see what happens when no one pays rent." required>
-    
+    <input type="number" id="housing-field-vacancy" name="vacancy" value="10" min="0" max="100" step="any" required aria-describedby="housing-hint-vacancy">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="housing-hint-vacancy" aria-describedby="housing-hint-vacancy" aria-label="Explain How often might the rooms sit empty? (%)">?</button>
+    <small id="housing-hint-vacancy" class="metric-description" hidden>Vacancy rate. Enter 100% to see what happens when no one pays rent.</small>
   </div><div class="field">
     <label for="housing-field-rentGrowth">How much might your own rent rise each year? (%)</label>
     <input type="number" id="housing-field-rentGrowth" name="rentGrowth" value="3" min="-30" max="30" step="any" required>
     
   </div><div class="field">
     <label for="housing-field-appreciation">How much might the home price change each year? (%)</label>
-    <input type="number" id="housing-field-appreciation" name="appreciation" value="2" min="-30" max="30" step="Appreciation is a rise in the home price. Enter a negative number to test a drop." required>
-    
+    <input type="number" id="housing-field-appreciation" name="appreciation" value="2" min="-30" max="30" step="any" required aria-describedby="housing-hint-appreciation">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="housing-hint-appreciation" aria-describedby="housing-hint-appreciation" aria-label="Explain How much might the home price change each year? (%)">?</button>
+    <small id="housing-hint-appreciation" class="metric-description" hidden>Appreciation is a rise in the home price. Enter a negative number to test a drop.</small>
   </div><div class="field">
     <label for="housing-field-alternative">What might spare cash earn if you invest it? (%)</label>
-    <input type="number" id="housing-field-alternative" name="alternative" value="5" min="-30" max="35" step="Opportunity cost. This is the assumed annual return after tax on money that could be invested elsewhere." required>
-    
+    <input type="number" id="housing-field-alternative" name="alternative" value="5" min="-30" max="35" step="any" required aria-describedby="housing-hint-alternative">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="housing-hint-alternative" aria-describedby="housing-hint-alternative" aria-label="Explain What might spare cash earn if you invest it? (%)">?</button>
+    <small id="housing-hint-alternative" class="metric-description" hidden>Opportunity cost. This is the assumed annual return after tax on money that could be invested elsewhere.</small>
   </div><div class="field">
     <label for="housing-field-income">How much do you bring home each month?</label>
     <input type="number" id="housing-field-income" name="income" value="5500" min="0" max="1000000000" step="any" required>
     
   </div><div class="field">
     <label for="housing-field-housingBudget">What monthly housing cost fits your budget?</label>
-    <input type="number" id="housing-field-housingBudget" name="housingBudget" value="1800" min="0" max="1000000000" step="Use a limit that leaves room for your other bills and goals." required>
-    
+    <input type="number" id="housing-field-housingBudget" name="housingBudget" value="1800" min="0" max="1000000000" step="any" required aria-describedby="housing-hint-housingBudget">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="housing-hint-housingBudget" aria-describedby="housing-hint-housingBudget" aria-label="Explain What monthly housing cost fits your budget?">?</button>
+    <small id="housing-hint-housingBudget" class="metric-description" hidden>Use a limit that leaves room for your other bills and goals.</small>
   </div></div></fieldset>
         </details>
         <p class="note">The model uses a fixed loan rate. It leaves out rental income tax, tax breaks, and local limits on renting out rooms. Check these before using rent to cover a payment.</p>
@@ -349,8 +357,9 @@
     
   </div><div class="field">
     <label for="debt-field-apr">What yearly rate does the loan charge? (%)</label>
-    <input type="number" id="debt-field-apr" name="apr" value="9" min="0" max="100" step="Use the loan interest rate. APR is an annual borrowing-cost measure that can also include fees." required>
-    
+    <input type="number" id="debt-field-apr" name="apr" value="9" min="0" max="100" step="any" required aria-describedby="debt-hint-apr">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="debt-hint-apr" aria-describedby="debt-hint-apr" aria-label="Explain What yearly rate does the loan charge? (%)">?</button>
+    <small id="debt-hint-apr" class="metric-description" hidden>Use the loan interest rate. APR is an annual borrowing-cost measure that can also include fees.</small>
   </div><div class="field">
     <label for="debt-field-payment">What do you pay on the loan each month?</label>
     <input type="number" id="debt-field-payment" name="payment" value="275" min="0" max="1000000000" step="any" required>
@@ -361,8 +370,9 @@
     
   </div><div class="field">
     <label for="debt-field-invest">What could the investment earn each year? (%)</label>
-    <input type="number" id="debt-field-invest" name="invest" value="5" min="-30" max="35" step="Enter an assumed annual return after fees. Try a lower or negative rate to see what a bad market could do." required>
-    
+    <input type="number" id="debt-field-invest" name="invest" value="5" min="-30" max="35" step="any" required aria-describedby="debt-hint-invest">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="debt-hint-invest" aria-describedby="debt-hint-invest" aria-label="Explain What could the investment earn each year? (%)">?</button>
+    <small id="debt-hint-invest" class="metric-description" hidden>Enter an assumed annual return after fees. Try a lower or negative rate to see what a bad market could do.</small>
   </div></div>
         
         <p class="note" data-quick-note>The quick estimate compares seven years and uses Andy’s $7,500 cash balance and $4,500 cushion. Add your own under Add more details.</p>
@@ -381,8 +391,9 @@
     
   </div><div class="field">
     <label for="debt-field-extra">Would you put extra money toward the loan each month?</label>
-    <input type="number" id="debt-field-extra" name="extra" value="0" min="0" max="1000000000" step="The debt path adds this to each payment. The investing path puts the same extra amount into investments each month." required>
-    
+    <input type="number" id="debt-field-extra" name="extra" value="0" min="0" max="1000000000" step="any" required aria-describedby="debt-hint-extra">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="debt-hint-extra" aria-describedby="debt-hint-extra" aria-label="Explain Would you put extra money toward the loan each month?">?</button>
+    <small id="debt-hint-extra" class="metric-description" hidden>The debt path adds this to each payment. The investing path puts the same extra amount into investments each month.</small>
   </div></div></fieldset>
         </details>
         <p class="note">This assumes a fixed-rate loan with monthly payments and no fees, taxes, or forgiveness. The two paths put the same total cash to work each month.</p>
@@ -461,56 +472,67 @@
         
         <div class="field-grid"><div class="field">
     <label for="insurance-field-claims">How much covered in-network care might you use this year?</label>
-    <input type="number" id="insurance-field-claims" name="claims" value="6000" min="0" max="1000000000" step="Use the insurer’s allowed amount for care that counts toward your deductible, before the plan pays its share." required>
-    
+    <input type="number" id="insurance-field-claims" name="claims" value="6000" min="0" max="1000000000" step="any" required aria-describedby="insurance-hint-claims">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="insurance-hint-claims" aria-describedby="insurance-hint-claims" aria-label="Explain How much covered in-network care might you use this year?">?</button>
+    <small id="insurance-hint-claims" class="metric-description" hidden>Use the insurer’s allowed amount for care that counts toward your deductible, before the plan pays its share.</small>
   </div></div>
         <div class="pair health-plans"><fieldset><legend>Plan A · HMO example</legend><div class="field-grid"><div class="field">
     <label for="insurance-field-aPremium">What do you pay each month for the plan?</label>
-    <input type="number" id="insurance-field-aPremium" name="aPremium" value="140" min="0" max="1000000000" step="Premium. You pay it even if you never use the plan." required>
-    
+    <input type="number" id="insurance-field-aPremium" name="aPremium" value="140" min="0" max="1000000000" step="any" required aria-describedby="insurance-hint-aPremium">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="insurance-hint-aPremium" aria-describedby="insurance-hint-aPremium" aria-label="Explain What do you pay each month for the plan?">?</button>
+    <small id="insurance-hint-aPremium" class="metric-description" hidden>Premium. You pay it even if you never use the plan.</small>
   </div><div class="field">
     <label for="insurance-field-aDeductible">What do you pay before the plan starts sharing costs?</label>
-    <input type="number" id="insurance-field-aDeductible" name="aDeductible" value="2500" min="0" max="1000000000" step="Deductible. Some services can be covered before you reach it." required>
-    
+    <input type="number" id="insurance-field-aDeductible" name="aDeductible" value="2500" min="0" max="1000000000" step="any" required aria-describedby="insurance-hint-aDeductible">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="insurance-hint-aDeductible" aria-describedby="insurance-hint-aDeductible" aria-label="Explain What do you pay before the plan starts sharing costs?">?</button>
+    <small id="insurance-hint-aDeductible" class="metric-description" hidden>Deductible. Some services can be covered before you reach it.</small>
   </div><div class="field">
     <label for="insurance-field-aCoinsurance">What share do you pay after that? (%)</label>
-    <input type="number" id="insurance-field-aCoinsurance" name="aCoinsurance" value="20" min="0" max="100" step="Coinsurance. If the share is 20%, you pay $20 of a $100 allowed charge after meeting the deductible." required>
-    
+    <input type="number" id="insurance-field-aCoinsurance" name="aCoinsurance" value="20" min="0" max="100" step="any" required aria-describedby="insurance-hint-aCoinsurance">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="insurance-hint-aCoinsurance" aria-describedby="insurance-hint-aCoinsurance" aria-label="Explain What share do you pay after that? (%)">?</button>
+    <small id="insurance-hint-aCoinsurance" class="metric-description" hidden>Coinsurance. If the share is 20%, you pay $20 of a $100 allowed charge after meeting the deductible.</small>
   </div><div class="field">
     <label for="insurance-field-aMaximum">What’s the most you pay for covered in-network care?</label>
-    <input type="number" id="insurance-field-aMaximum" name="aMaximum" value="6500" min="0" max="1000000000" step="Out-of-pocket maximum. Premiums and usually uncovered or out-of-network care are separate." required>
-    
+    <input type="number" id="insurance-field-aMaximum" name="aMaximum" value="6500" min="0" max="1000000000" step="any" required aria-describedby="insurance-hint-aMaximum">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="insurance-hint-aMaximum" aria-describedby="insurance-hint-aMaximum" aria-label="Explain What’s the most you pay for covered in-network care?">?</button>
+    <small id="insurance-hint-aMaximum" class="metric-description" hidden>Out-of-pocket maximum. Premiums and usually uncovered or out-of-network care are separate.</small>
   </div></div></fieldset><fieldset><legend>Plan B · PPO example</legend><div class="field-grid"><div class="field">
     <label for="insurance-field-bPremium">What do you pay each month for the plan?</label>
-    <input type="number" id="insurance-field-bPremium" name="bPremium" value="260" min="0" max="1000000000" step="Premium. You pay it even if you never use the plan." required>
-    
+    <input type="number" id="insurance-field-bPremium" name="bPremium" value="260" min="0" max="1000000000" step="any" required aria-describedby="insurance-hint-bPremium">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="insurance-hint-bPremium" aria-describedby="insurance-hint-bPremium" aria-label="Explain What do you pay each month for the plan?">?</button>
+    <small id="insurance-hint-bPremium" class="metric-description" hidden>Premium. You pay it even if you never use the plan.</small>
   </div><div class="field">
     <label for="insurance-field-bDeductible">What do you pay before the plan starts sharing costs?</label>
-    <input type="number" id="insurance-field-bDeductible" name="bDeductible" value="750" min="0" max="1000000000" step="Deductible. Some services can be covered before you reach it." required>
-    
+    <input type="number" id="insurance-field-bDeductible" name="bDeductible" value="750" min="0" max="1000000000" step="any" required aria-describedby="insurance-hint-bDeductible">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="insurance-hint-bDeductible" aria-describedby="insurance-hint-bDeductible" aria-label="Explain What do you pay before the plan starts sharing costs?">?</button>
+    <small id="insurance-hint-bDeductible" class="metric-description" hidden>Deductible. Some services can be covered before you reach it.</small>
   </div><div class="field">
     <label for="insurance-field-bCoinsurance">What share do you pay after that? (%)</label>
-    <input type="number" id="insurance-field-bCoinsurance" name="bCoinsurance" value="15" min="0" max="100" step="Coinsurance. If the share is 20%, you pay $20 of a $100 allowed charge after meeting the deductible." required>
-    
+    <input type="number" id="insurance-field-bCoinsurance" name="bCoinsurance" value="15" min="0" max="100" step="any" required aria-describedby="insurance-hint-bCoinsurance">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="insurance-hint-bCoinsurance" aria-describedby="insurance-hint-bCoinsurance" aria-label="Explain What share do you pay after that? (%)">?</button>
+    <small id="insurance-hint-bCoinsurance" class="metric-description" hidden>Coinsurance. If the share is 20%, you pay $20 of a $100 allowed charge after meeting the deductible.</small>
   </div><div class="field">
     <label for="insurance-field-bMaximum">What’s the most you pay for covered in-network care?</label>
-    <input type="number" id="insurance-field-bMaximum" name="bMaximum" value="3800" min="0" max="1000000000" step="Out-of-pocket maximum. Premiums and usually uncovered or out-of-network care are separate." required>
-    
+    <input type="number" id="insurance-field-bMaximum" name="bMaximum" value="3800" min="0" max="1000000000" step="any" required aria-describedby="insurance-hint-bMaximum">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="insurance-hint-bMaximum" aria-describedby="insurance-hint-bMaximum" aria-label="Explain What’s the most you pay for covered in-network care?">?</button>
+    <small id="insurance-hint-bMaximum" class="metric-description" hidden>Out-of-pocket maximum. Premiums and usually uncovered or out-of-network care are separate.</small>
   </div></div></fieldset></div>
         <p class="note" data-quick-note>The quick estimate assumes no separate visit charges or uncovered bills. Use Add more details to include them.</p>
         <details class="advanced" data-advanced><summary>Add more details</summary>
           <fieldset disabled aria-label="Advanced assumptions"><div class="field-grid"><div class="field">
     <label for="insurance-field-aCopays">Plan A · Flat visit and prescription charges for the year</label>
-    <input type="number" id="insurance-field-aCopays" name="aCopays" value="0" min="0" max="1000000000" step="Copays. Add charges for separate services that you did not include in the covered bill amount." required>
-    
+    <input type="number" id="insurance-field-aCopays" name="aCopays" value="0" min="0" max="1000000000" step="any" required aria-describedby="insurance-hint-aCopays">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="insurance-hint-aCopays" aria-describedby="insurance-hint-aCopays" aria-label="Explain Plan A · Flat visit and prescription charges for the year">?</button>
+    <small id="insurance-hint-aCopays" class="metric-description" hidden>Copays. Add charges for separate services that you did not include in the covered bill amount.</small>
   </div><div class="field">
     <label for="insurance-field-aUncovered">Plan A · Bills the plan won’t cover</label>
     <input type="number" id="insurance-field-aUncovered" name="aUncovered" value="0" min="0" max="1000000000" step="any" required>
     
   </div><div class="field">
     <label for="insurance-field-bCopays">Plan B · Flat visit and prescription charges for the year</label>
-    <input type="number" id="insurance-field-bCopays" name="bCopays" value="0" min="0" max="1000000000" step="Copays. Add charges for separate services that you did not include in the covered bill amount." required>
-    
+    <input type="number" id="insurance-field-bCopays" name="bCopays" value="0" min="0" max="1000000000" step="any" required aria-describedby="insurance-hint-bCopays">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="insurance-hint-bCopays" aria-describedby="insurance-hint-bCopays" aria-label="Explain Plan B · Flat visit and prescription charges for the year">?</button>
+    <small id="insurance-hint-bCopays" class="metric-description" hidden>Copays. Add charges for separate services that you did not include in the covered bill amount.</small>
   </div><div class="field">
     <label for="insurance-field-bUncovered">Plan B · Bills the plan won’t cover</label>
     <input type="number" id="insurance-field-bUncovered" name="bUncovered" value="0" min="0" max="1000000000" step="any" required>
@@ -554,20 +576,23 @@
     
   </div><div class="field">
     <label for="fx-field-entry">How much local money does 1 unit of spending money buy today?</label>
-    <input type="number" id="fx-field-entry" name="entry" value="1500" min="1e-12" max="100000000" step="Starting exchange rate. For ₦1,500 per $1, enter 1500." required>
-    
+    <input type="number" id="fx-field-entry" name="entry" value="1500" min="1e-12" max="100000000" step="any" required aria-describedby="fx-hint-entry">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="fx-hint-entry" aria-describedby="fx-hint-entry" aria-label="Explain How much local money does 1 unit of spending money buy today?">?</button>
+    <small id="fx-hint-entry" class="metric-description" hidden>Starting exchange rate. For ₦1,500 per $1, enter 1500.</small>
   </div><div class="field">
     <label for="fx-field-exit">How much local money might 1 unit buy when you sell?</label>
-    <input type="number" id="fx-field-exit" name="exit" value="2000" min="1e-12" max="100000000" step="Ending exchange rate. For ₦2,000 per $1, enter 2000. A higher number means the local money buys less of your spending currency." required>
-    
+    <input type="number" id="fx-field-exit" name="exit" value="2000" min="1e-12" max="100000000" step="any" required aria-describedby="fx-hint-exit">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="fx-hint-exit" aria-describedby="fx-hint-exit" aria-label="Explain How much local money might 1 unit buy when you sell?">?</button>
+    <small id="fx-hint-exit" class="metric-description" hidden>Ending exchange rate. For ₦2,000 per $1, enter 2000. A higher number means the local money buys less of your spending currency.</small>
   </div></div>
         
         <p class="note" data-quick-note>The quick estimate uses one year, zero fees, and 20% local inflation. Use Add more details to try a worse exchange rate or change the costs.</p>
         <details class="advanced" data-advanced><summary>Add more details</summary>
           <fieldset disabled aria-label="Advanced assumptions"><div class="field-grid"><div class="field">
     <label for="fx-field-stress">What worse exchange rate could you handle?</label>
-    <input type="number" id="fx-field-stress" name="stress" value="2500" min="1e-12" max="100000000" step="Stress scenario. Try a rate that gives you less spending money than your main estimate." required>
-    
+    <input type="number" id="fx-field-stress" name="stress" value="2500" min="1e-12" max="100000000" step="any" required aria-describedby="fx-hint-stress">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="fx-hint-stress" aria-describedby="fx-hint-stress" aria-label="Explain What worse exchange rate could you handle?">?</button>
+    <small id="fx-hint-stress" class="metric-description" hidden>Stress scenario. Try a rate that gives you less spending money than your main estimate.</small>
   </div><div class="field">
     <label for="fx-field-days">How many days will you leave the money invested?</label>
     <input type="number" id="fx-field-days" name="days" value="365" min="1" max="36500" step="1" required>
@@ -620,12 +645,14 @@
     
   </div><div class="field">
     <label for="wrappers-field-now">What share would you pay in tax today? (%)</label>
-    <input type="number" id="wrappers-field-now" name="now" value="22" min="0" max="80" step="Marginal tax rate. Estimate the tax you would pay on this extra slice of income today." required>
-    
+    <input type="number" id="wrappers-field-now" name="now" value="22" min="0" max="80" step="any" required aria-describedby="wrappers-hint-now">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="wrappers-hint-now" aria-describedby="wrappers-hint-now" aria-label="Explain What share would you pay in tax today? (%)">?</button>
+    <small id="wrappers-hint-now" class="metric-description" hidden>Marginal tax rate. Estimate the tax you would pay on this extra slice of income today.</small>
   </div><div class="field">
     <label for="wrappers-field-later">What share might you pay in tax when you take it out? (%)</label>
-    <input type="number" id="wrappers-field-later" name="later" value="12" min="0" max="80" step="Withdrawal tax rate. Estimate the average tax that would apply to this money when you take it out." required>
-    
+    <input type="number" id="wrappers-field-later" name="later" value="12" min="0" max="80" step="any" required aria-describedby="wrappers-hint-later">
+    <button type="button" class="metric-help field-help" aria-expanded="false" aria-controls="wrappers-hint-later" aria-describedby="wrappers-hint-later" aria-label="Explain What share might you pay in tax when you take it out? (%)">?</button>
+    <small id="wrappers-hint-later" class="metric-description" hidden>Withdrawal tax rate. Estimate the average tax that would apply to this money when you take it out.</small>
   </div></div>
         
         <p class="note" data-quick-note>The quick estimate uses 7% yearly growth for 30 years. That’s an illustration. Change it under Add more details.</p>
