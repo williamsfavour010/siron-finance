@@ -25,6 +25,17 @@ const sources = {
   seDeposit: "https://www.riksgalden.se/en/our-operations/deposit-insurance/how-the-deposit-insurance-works/",
 };
 
+// A local starting task with the specific place to do it.
+export const localStarts = {
+  us: ['Buying your first home? Get two Loan Estimates for the same loan type, rate lock and term. Compare the full monthly cost and cash to close. If a room rental is part of your plan, ask whether it is allowed and whether a lender can count the income.', 'Compare Loan Estimates', 'https://www.consumerfinance.gov/owning-a-home/compare/compare-loan-estimates/'],
+  uk: ['Planning a first home? Estimate your deposit and moving costs before choosing where to save it. If considering a Lifetime ISA, check the current purchase conditions and what happens if your plans change.', 'MoneyHelper first-time buyer guide', 'https://www.moneyhelper.org.uk/en/homes/buying-a-home/first-time-buyer-money-tips'],
+  ng: ['Before wiring money to a fund, look up the operator’s exact registered name and check which activities it is authorized for. Ask for the fund factsheet and find the fees, payout timeline, custodian, and currency. If you need cash on a fixed date, compare the withdrawal timeline with the bill’s due date.', 'Look up a registered Nigerian operator', sources.ngOperator],
+  ca: ['Saving for a first home? Check whether you can open a First Home Savings Account before sending money. Then run the federal mortgage tools with your actual provincial housing costs. Keep your own contribution records when moving money between institutions.', 'Canadian money and mortgage tools', 'https://www.canada.ca/en/services/finance/tools.html'],
+  ie: ['If you are looking at a first home, build two numbers first. Work out the deposit plus fees you need upfront, then the payment you could still cover at a higher rate. Check the loan limits separately so you know what to ask the lender.', 'CCPC mortgage guide', 'https://www.ccpc.ie/manage-your-money/buying-a-home/about-mortgages/understanding-mortgages/'],
+  gh: ['Before putting cedis away, compare what you receive from a deposit or bill by the date you need the cash. Check the auction date and maturity, then confirm the bank or firm with the correct regulator before transferring money.', 'Bank of Ghana register', 'https://www.bog.gov.gh/supervision-regulation/registered-institutions/'],
+  se: ['Before bidding on a home, estimate the loan payment, required principal repayments, and the monthly housing association fee. Ask the lender to show those amounts separately and test a higher rate.', 'Konsumenternas guide to getting a mortgage', 'https://www.konsumenternas.se/lan--betalningar/lan/bolan/innan-du-tar-ett-bolan/'],
+};
+
 export const countries = {
   us: {
     name: "United States",

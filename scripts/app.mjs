@@ -1,5 +1,5 @@
-import { goalPlan, moneyMap, compound, wrappers, fx, housing, insurance, debtComparison } from './math.mjs';
-import { resultHelp } from '../content/result-help.mjs';
+import { goalPlan, moneyMap, monthlyPlan, wrappers, fx, housing, homePriceAtMonthlyBudget, insurance, healthSwitchPoints, debtComparison } from './math.mjs?v=practical';
+import { resultHelp } from '../content/result-help.mjs?v=practical';
 
 // Rendering helpers create text nodes, including for values entered by visitors.
 const node = (tag, text) => Object.assign(document.createElement(tag), { textContent: text });
@@ -32,7 +32,10 @@ function addResultHelp(row, term, detail, label) {
   button.setAttribute('aria-describedby', description.id);
   term.append(button);
   detail.append(description);
+  wireHelp(row, button, description);
+}
 
+function wireHelp(row, button, description) {
   // Hover and keyboard focus preview the explanation. Clicking pins it.
   function show(pinned = false) {
     if (activeHelp?.button === button) {
@@ -44,7 +47,8 @@ function addResultHelp(row, term, detail, label) {
     button.setAttribute('aria-expanded', 'true');
     activeHelp = { button, description, pinned };
   }
-  row.addEventListener('pointerenter', event => {
+  const hoverTarget = button.classList.contains('field-help') ? button : row;
+  hoverTarget.addEventListener('pointerenter', event => {
     if (event.pointerType === 'mouse' && !activeHelp?.pinned && !document.activeElement?.matches('.metric-help:focus-visible')) show();
   });
   row.addEventListener('pointerleave', () => {
@@ -69,8 +73,12 @@ document.addEventListener('keydown', event => {
   }
 });
 document.addEventListener('click', event => {
-  if (activeHelp && !activeHelp.button.closest('.metric').contains(event.target)) closeHelp();
+  if (activeHelp && !activeHelp.button.closest('.metric, .field').contains(event.target)) closeHelp();
 });
+
+for (const button of document.querySelectorAll('.field-help')) {
+  wireHelp(button.closest('.field'), button, document.getElementById(button.getAttribute('aria-controls')));
+}
 
 function metrics(rows) {
   const list = document.createElement('dl');
@@ -125,6 +133,54 @@ function readInputs(form) {
 
 const formatMonths = months => months === null ? 'Beyond comparison period' : months === 0 ? 'Already paid' : `${months} months`;
 const formatGap = (gap, money) => Math.abs(gap) < .005 ? 'On target in this model' : gap > 0 ? `${money(gap)} short` : `${money(Math.abs(gap))} ahead`;
+const planForm = document.querySelector('#next-form');
+
+function copyToPlan(currency, values, label) {
+  const button = node('button', label);
+  button.type = 'button';
+  button.className = 'button secondary';
+  button.addEventListener('click', () => {
+    const disclosure = planForm.closest('details');
+    disclosure.open = true;
+    const note = document.getElementById('plan-input-note');
+    const unit = planForm.elements.currency;
+    const untouched = !planForm.dataset.copied && unit.value === unit.options[0].value
+      && Array.from(planForm.querySelectorAll('input')).every(input => input.value === input.defaultValue);
+    if (untouched) unit.value = currency;
+    if (unit.value === currency) {
+      for (const [name, value] of Object.entries(values)) planForm.elements[name].value = value;
+      planForm.dataset.copied = 'true';
+      note.textContent = `Copied your ${currency} amounts. Review the remaining inputs before making a plan.`;
+    } else {
+      note.textContent = `Your plan uses ${unit.value}. Convert your ${currency} amounts first, or choose the same currency for the whole plan.`;
+    }
+    hideResult(planForm);
+    disclosure.querySelector('summary').focus();
+    disclosure.scrollIntoView();
+  });
+  return button;
+}
+
+function comparisonTable(columnLabels, rows) {
+  const table = node('table');
+  const header = table.createTHead().insertRow();
+  for (const label of columnLabels) {
+    const cell = node('th', label);
+    cell.scope = 'col';
+    header.append(cell);
+  }
+  const body = table.createTBody();
+  for (const [label, ...values] of rows) {
+    const row = body.insertRow();
+    const heading = node('th', label);
+    heading.scope = 'row';
+    row.append(heading,...values.map(value => node('td', value)));
+  }
+  const wrapper = node('div');
+  wrapper.className = 'comparison-table';
+  wrapper.append(table);
+  return wrapper;
+}
 
 const calculate = {
   goal(v, money) {
@@ -139,9 +195,10 @@ const calculate = {
     const annualReturn = rate => percent(rate / 100);
     return [
       metrics([['Target balance', money(base.target)], ['Projected balance', money(base.projected)], ['Monthly contribution needed', money(base.required)], ['Gap to target', formatGap(base.gap, money)], ['Net annual return after inflation', percent(base.realReturn)], ['Years of spending modeled', base.drawYears]]),
-      paragraph(`The main estimate assumes a ${annualReturn(v.returnRate)} annual investment return before fees and inflation. If investments return ${annualReturn(lowerRate)} a year, you’d need to save ${money(lower.required)} per month. At ${annualReturn(higherRate)} a year, you’d need ${money(upper.required)} per month.`),
+      paragraph(`Assumed annual investment return before fees and inflation is ${annualReturn(v.returnRate)}. At ${annualReturn(lowerRate)} a year, you’d need to save ${money(lower.required)} per month. At ${annualReturn(higherRate)} a year, you’d need ${money(upper.required)} per month.`),
       paragraph('These scenarios assume steady returns. Bad years early in retirement can change how long your money lasts.'),
       anchor('Check your monthly contribution against actual spending →', 'budget'),
+      copyToPlan(v.currency, { target: base.required, already: v.monthly }, 'Use this savings target in my plan'),
     ];
   },
   budget(v, money) {
@@ -150,11 +207,8 @@ const calculate = {
       metrics([['Cash left this month', money(r.remainder)], ['Emergency cover', r.cover === null ? 'Add essential spending' : `${r.cover.toFixed(1)} months`], ['Net worth', money(r.netWorth)], ['Saving / take-home pay', percent(r.netRate)], ['Saving / gross cash pay', percent(r.grossRate)]]),
       paragraph(r.remainder < 0 ? 'This month needs a change. Check for a one-off expense, a missed bill category, or a contribution you can temporarily adjust.' : 'Check whether this remainder has a job. An upcoming bill, a reserve or a dated goal can each make sense.'),
       anchor('Work through the example monthly close →', 'workbook-downloads'),
+      copyToPlan(v.currency, { left: r.remainder }, 'Use this monthly balance in my plan'),
     ];
-  },
-  compound(v, money) {
-    const r = compound(v);
-    return [metrics([['Projected future balance', money(r.total)], ['Total put in', money(r.contributed)], ['Growth after fee', money(r.total-r.contributed)], ['In today’s money', money(r.real)], ['Gap to target', formatGap(v.target - r.real, money)]])];
   },
   wrappers(v, money) {
     if (v.currency !== 'USD') throw new Error('Use USD for the US Traditional and Roth example.');
@@ -164,28 +218,53 @@ const calculate = {
       anchor('Review the US retirement rules →', 'country-us')];
   },
   fx(v, money) {
-    const r = fx(v);
-    return [metrics([['Entry cost in goal currency', money(r.initial)], ['Exit proceeds in goal currency', money(r.goalProceeds)], ['Goal-currency return', percent(r.goalReturn)], ['Stress exit return', percent(r.stressReturn)], ['Annualized local return after costs', percent(r.annualLocal)], ['Local real holding-period return', percent(r.localReal)]]),
-      paragraph(`Quotes were entered as ${v.currency} per ${v.localCurrency}. The goal-currency returns are for the full holding period.`)];
+    if (v.currency === v.localCurrency) throw new Error('Choose two different currencies for this comparison.');
+    const r = fx({ ...v, entry: 1 / v.entry, exit: 1 / v.exit, stress: 1 / v.stress });
+    const rows = [['What you put in, converted', money(r.initial)], ['What you get back, converted', money(r.goalProceeds)], ['Gain or loss in the money you’ll spend', percent(r.goalReturn)], ['Gain or loss before conversion', percent((v.proceeds - v.localCosts) / v.cost - 1)]];
+    if (v.advanced) rows.push(['Gain or loss at the worse rate', percent(r.stressReturn)], ['Local buying power after inflation', percent(r.localReal)]);
+    return [metrics(rows), paragraph(`You entered ${v.localCurrency} per 1 ${v.currency}. Gains and losses cover the full time you hold the investment.`)];
   },
   housing(v, money) {
-    const r = housing(v);
-    return [metrics([['Cash to close', money(r.cashToClose)], ['Monthly principal and interest', money(r.payment)], ['Starting owner outlay after room rent', money(r.outlay)], ['Owner equity at sale, after selling costs', money(r.equity)], ['Renter investment balance at exit', money(r.renterPortfolio)], ['Owner investment balance at exit', money(r.ownerPortfolio)], ['Owner minus renter wealth at exit', money(r.advantage)], ['First year owner catches up', r.firstBreakEven ?? 'Beyond comparison period']]),
-      paragraph('Try setting room vacancy to 100%, home price growth to zero, or selling earlier. If one change reverses the result, that assumption deserves more attention.')];
+    const buy = housing({ ...v, roomRent: 0 });
+    const share = housing({ ...v, roomRent: v.rooms * v.roomRent });
+    const catchUp = result => result.firstBreakEven ? `Year ${result.firstBreakEven}` : 'Beyond this period';
+    const occupiedRooms = v.rooms * (1 - v.vacancy / 100);
+    const targetRent = cost => occupiedRooms > 0 ? money(Math.ceil(Math.max(0, cost) / occupiedRooms)) + ' per room' : 'No occupied rooms';
+    const rows = [
+      ['Cash needed to buy', '—', money(buy.cashToClose), money(share.cashToClose)],
+      ['Monthly cost at the start', money(v.rent), money(buy.outlay), money(share.outlay)],
+      ['First year at least as well off as renting', '—', catchUp(buy), catchUp(share)],
+      ['Ahead or behind renting when you move', '—', formatGap(-buy.advantage,money), formatGap(-share.advantage,money)],
+    ];
+    if (v.advanced && v.income > 0) rows.splice(2, 0, ['Share of take-home pay', ...[v.rent,buy.outlay,share.outlay].map(cost=>percent(cost / v.income))]);
+    const priceLimit = roomIncome => {
+      const price = homePriceAtMonthlyBudget(v, roomIncome);
+      return price === null ? 'No price limit from these monthly costs' : money(Math.floor(price));
+    };
+    const affordable = v.advanced ? paragraph(`With a monthly budget of ${money(v.housingBudget)}, the estimated home price ceiling is ${priceLimit(0)} without room rent and ${priceLimit(share.roomIncome)} with it. This holds the rate and fixed costs steady. Check upfront cash and lender requirements separately.`) : null;
+    return [comparisonTable(['Compare','Rent','Buy','Buy + rent rooms'],rows),
+      metrics([['Monthly mortgage payment',money(buy.payment)], ['Expected monthly room rent',money(share.roomIncome)], ['Rent needed to match your current rent',targetRent(buy.outlay - v.rent)], ['Rent needed to cover the whole monthly cost',targetRent(buy.outlay)]]),
+      ...(affordable ? [affordable] : []),
+      paragraph('Buying can build equity but ties up cash. Room rent can lower the bill, and you still owe the full amount when rooms are empty. Try less room rent, zero home price growth, or a shorter stay.')];
   },
   insurance(v, money) {
-    if (v.low > v.medium || v.medium > v.high) throw new Error('Enter claims in order from low to high.');
     const plan = prefix => Object.fromEntries(['premium','deductible','coinsurance','maximum','copays','uncovered'].map(k=>[k,v[prefix+k[0].toUpperCase()+k.slice(1)]]));
     const a = plan('a'), b = plan('b');
     if (a.maximum < a.deductible || b.maximum < b.deductible) throw new Error('The out-of-pocket maximum must cover at least the deductible in this simplified model.');
-    return [metrics([
-      ...['low','medium','high'].flatMap(use=>[['Plan A · '+use+' use', money(insurance(a,v[use]).cost)],['Plan B · '+use+' use', money(insurance(b,v[use]).cost)]]),
-      ['A · Premium plus covered ceiling', money(insurance(a,0).coveredCeiling)], ['B · Premium plus covered ceiling', money(insurance(b,0).coveredCeiling)],
-    ]), paragraph('Check doctors, hospitals, medications and exclusions separately. The model cannot tell whether a specific claim will be covered.')];
+    const plans = [a,b];
+    const switches = healthSwitchPoints(a,b);
+    const costs = plans.map(plan => insurance(plan,v.claims).cost);
+    const diff = costs[0] - costs[1];
+    return [comparisonTable(['Yearly cost','Plan A','Plan B'],[
+      ['No care costs · plan payments only', ...plans.map(plan=>money(12 * plan.premium))],
+      ['Your estimated year', ...costs.map(money)],
+      ['Most for covered care + plan payments', ...plans.map(plan=>money(insurance(plan,0).coveredCeiling))],
+    ]), paragraph(Math.abs(diff) < .005 ? 'Both plans cost the same at the level of care you entered.' : `Plan ${diff < 0 ? 'A' : 'B'} costs about ${money(Math.abs(diff))} less at that level of care.`),
+    paragraph(switches.length ? `The lower-cost plan changes around ${switches.map(money).join(' and ')} in covered bills, with the other costs you entered held constant.` : 'The lower-cost plan does not switch in this model as covered bills rise. Check network access and uncovered costs before choosing.')];
   },
   debt(v, money) {
     const r = debtComparison(v);
-    return [metrics([['Modeled interest avoided by prepaying', money(r.invest.interest-r.prepay.interest)], ['Payoff with prepayment', formatMonths(r.prepay.paidAt)], ['Payoff without prepayment', formatMonths(r.invest.paidAt)], ['Prepay path net position', money(r.prepay.net)], ['Invest path net position', money(r.invest.net)], ['Accessible cash after committing lump sum', money(r.cashLeft)]]),
+    return [metrics([['Interest saved by paying extra', money(r.invest.interest-r.prepay.interest)], ['Time to pay off the loan with extra payments', formatMonths(r.prepay.paidAt)], ['Time to pay off the loan on schedule', formatMonths(r.invest.paidAt)], ['What you’d have after debt if you pay extra', money(r.prepay.net)], ['What you’d have after debt if you invest', money(r.invest.net)], ['Cash you’d still have on hand', money(r.cashLeft)]]),
       paragraph(r.belowFloor ? 'Either use of the lump sum would take accessible cash below your reserve floor. Compare a smaller amount or waiting.' : 'Try a low or negative investment return. The repayment schedule stays fixed here while the investment outcome changes.')];
   },
 };
@@ -195,6 +274,8 @@ for (const form of document.querySelectorAll('form[data-tool]')) {
     event.preventDefault();
     try {
       const v = readInputs(form);
+      v.currency ??= 'USD';
+      v.advanced = form.querySelector('[data-advanced]')?.open ?? false;
       render(form, ...calculate[form.dataset.tool](v, value => amount(value,v.currency)));
     } catch (error) {
       const message = paragraph(error.message);
@@ -204,52 +285,25 @@ for (const form of document.querySelectorAll('form[data-tool]')) {
   });
 }
 
-const checkup = document.querySelector('#checkup-form');
-checkup.addEventListener('submit', event => {
+planForm.addEventListener('submit', event => {
   event.preventDefault();
-  const v = Object.fromEntries(new FormData(checkup));
-  const choices = new Map();
-  const add = (id,label) => choices.set(id,label);
-  if (v.work !== 'stable' || v.reserve === 'low' || v.reserve === 'uncertain') add('budget','Work out what an essential month costs');
-  if (v.obligation === 'debt') add('debt','Compare debt payments and the cash you can keep');
-  if (v.obligation === 'match') add('next-dollar','Check what your employer contributes');
-  if (v.obligation === 'family') add('learn-spending','Plan for giving and family support');
-  if (v.risk !== 'later') add('learn-cash-flow','Check what needs to stay accessible');
-  const labels = { budget:'Track your spending', goal:'Work out your target', housing:'Compare housing options', compound:'Compare a long-term contribution', insurance:'Compare protection costs' };
-  if (!choices.has(v.goal)) add(v.goal,labels[v.goal]);
-  if (v.currency !== 'same' || v.tax !== 'same') add('fx','Compare the result in your goal currency');
-  if (v.tax === 'same' && document.getElementById('country-'+v.live)) add('country-'+v.live,'Open the playbook for the country you selected');
-  else add('countries','Check the country rules and resolve tax residence before acting');
-  const list = document.createElement('ol');
-  for (const [id,label] of choices) {
-    const item = document.createElement('li');
-    item.append(anchor(label,id));
-    list.append(item);
-  }
-  render(checkup, paragraph('Start with the first item that you can act on this week.'), list);
-});
-
-const next = document.querySelector('#next-form');
-next.addEventListener('submit', event => {
-  event.preventDefault();
-  const v = Object.fromEntries(new FormData(next));
-  const first = v.bills === 'no' ? 'Make a plan for essentials and minimums due this month. Check dates and contact the provider early if a payment is at risk.'
-    : v.buffer === 'no' ? 'Compare keeping some cash accessible with committing all of it now. One new bill can send you back to borrowing.'
-    : v.debt === 'yes' && v.match === 'yes' ? 'Run both choices. Compare the borrowing cost and timing with the amount of the match, when it vests and whether you can afford to lock away the contribution.'
-    : v.debt === 'yes' ? 'Compare prepaying with preserving cash. Check the APR, fees, loan protections and what the payment actually changes.'
-    : v.match === 'yes' ? 'Check the match formula, vesting and what comes out of your pay. Compare the match-only contribution with what your next dated goal needs.'
-    : v.debt === 'unknown' || v.match === 'unknown' ? 'Find the APR and employer match terms first. Those two numbers can change the decision.'
-    : 'Give the next amount a deadline. Cash for a near-term goal and investments for a later one solve different problems.';
-  render(next, paragraph(first), anchor('Compare debt or investing →','debt'));
-});
-
-const due = document.querySelector('#diligence-form');
-due.addEventListener('submit', event => {
-  event.preventDefault();
-  const list = document.createElement('ul');
-  for (const item of due.querySelectorAll('input:not(:checked)')) list.append(node('li',item.value));
-  if (list.children.length) render(due, paragraph('Here is what still needs an independent answer.'), list);
-  else render(due, paragraph('You have checked all six prompts. Now test a total loss, a delayed exit and the cost of walking away. Keep the written evidence and get qualified advice when the structure calls for it.'));
+  const v = readInputs(planForm);
+  const money = value => amount(value,v.currency);
+  const r = monthlyPlan(v.target,v.already,v.left);
+  const nextSteps = {
+    cash: ['Pick a first cash cushion, such as one month of must-pay bills. Decide how much to move after each payday.', 'See how Amara builds a cushion', 'learn-cash-flow'],
+    debt: ['Gather the balances and rates. Compare paying extra on the highest-rate loan with keeping cash for an upcoming bill.', 'Work through Andy’s loan', 'debt'],
+    match: ['Ask what your employer matches, how much you need to contribute, and when the match becomes yours.', 'Compare your first investing steps', 'learn-investing-foundations'],
+    goal: ['Pick a date. Keep money you’ll need soon accessible. For longer goals, compare an amount you can invest automatically.', 'Start with Maya’s investing plan', 'learn-investing-foundations'],
+  };
+  const [action,label,id] = nextSteps[v.priority];
+  const cashMessage = v.left < 0
+    ? 'Start by covering this month’s shortfall. Check bills, timing, and savings contributions you could temporarily adjust.'
+    : r.shortfall > 0
+      ? 'Your budget cannot cover the full gap yet. Pick one bill to reduce or one way to raise income, or try a later goal date.'
+      : r.gap > 0 ? 'Your budget can cover the gap. Try setting a transfer for just after payday.' : 'Your current monthly savings meet the target you entered.';
+  render(planForm, metrics([['Extra you’d need to save each month',money(r.gap)], ['What your budget could spare for the goal',money(r.canAdd)], ['Monthly gap still to close',money(r.shortfall)]]),
+    paragraph(cashMessage), paragraph(action), anchor(label,id));
 });
 
 const forms = document.querySelectorAll('form');
@@ -260,6 +314,7 @@ for (const form of forms) {
   advanced?.addEventListener('toggle', () => {
     assumptions.disabled = !advanced.open;
     quickNote.hidden = advanced.open;
+    if (!advanced.open && activeHelp && advanced.contains(activeHelp.button)) closeHelp();
     hideResult(form);
   });
   form.addEventListener('reset', () => {
@@ -269,6 +324,11 @@ for (const form of forms) {
       quickNote.hidden = false;
     }
     hideResult(form);
+    if (form === planForm) {
+      delete planForm.dataset.copied;
+      document.getElementById('plan-input-note').textContent = 'Use the same currency for all three amounts. From the calculators above, you can copy your results into this plan.';
+    }
+    if (activeHelp && form.contains(activeHelp.button)) closeHelp();
   });
   form.addEventListener('input', () => hideResult(form));
   form.inert = false;
@@ -291,11 +351,12 @@ themeToggle.addEventListener('click', () => {
 // A link to an expandable section opens it, including when shared directly.
 function openFragment(fragment) {
   const id = fragment.slice(1);
-  const oldSections = { saving:'learn-cash-flow', investing:'learn-investing-foundations', earning:'learn-career', giving:'learn-spending', diaspora:'fx' };
+  const oldSections = { saving:'learn-cash-flow', investing:'learn-investing-foundations', earning:'learn-career', giving:'learn-spending', diaspora:'fx', learn:'tools', compound:'goal' };
   const target = document.getElementById(oldSections[id] ?? id);
   if (!target) return;
-  const disclosure = target.closest('details') ?? (target.id === 'checkup' ? target.querySelector('details') : null);
-  if (disclosure) disclosure.open = true;
+  for (let disclosure = target.closest('details'); disclosure; disclosure = disclosure.parentElement.closest('details')) {
+    disclosure.open = true;
+  }
   if (oldSections[id]) target.scrollIntoView();
 }
 document.addEventListener('click', event => {
@@ -323,18 +384,3 @@ function updateNavigation() {
 window.addEventListener('scroll', updateNavigation, { passive: true });
 window.addEventListener('resize', updateNavigation);
 updateNavigation();
-
-const search = document.querySelector('#lesson-search');
-const articles = [...document.querySelectorAll('[data-article]')];
-document.querySelector('#search-control').hidden = false;
-search.addEventListener('input', () => {
-  const tokens = search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
-  let found = 0;
-  for (const article of articles) {
-    const content = article.textContent.toLowerCase();
-    const match = tokens.every(token => content.includes(token));
-    article.hidden = !match;
-    if (match) found++;
-  }
-  document.querySelector('#search-result').textContent = tokens.length ? `${found} matching guides` : '';
-});

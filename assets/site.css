@@ -40,7 +40,7 @@ main {
 .brand { display: inline-flex; align-items: center; gap: .65rem; color: var(--ink); text-decoration: none; font-weight: 740; font-size: 1.12rem; white-space: nowrap; }
 .brand-mark { display: block; flex: none; width: 43px; height: 43px; object-fit: contain; }
 .nav-row nav { display: flex; align-items: center; gap: clamp(.8rem, 3vw, 2.5rem); }
-.nav-row nav a, .nav-action { color: var(--muted); text-decoration: none; font-size: .91rem; white-space: nowrap; }
+.nav-row nav a { color: var(--muted); text-decoration: none; font-size: .91rem; white-space: nowrap; }
 .nav-row a:hover { color: var(--mint); }
 .nav-row nav a[aria-current="location"] {
   color: var(--gold);
@@ -48,9 +48,6 @@ main {
   text-decoration-thickness: 2px;
   text-underline-offset: .45em;
 }
-.nav-action { color: var(--gold); background: var(--gold-wash); border: 1px solid var(--gold-line); padding: .45rem .85rem; border-radius: 6px; }
-.nav-row .nav-action:hover { color: #f5d49e; background: #e8bd7824; }
-.nav-action span { margin-left: .35rem; }
 .nav-controls { display: flex; align-items: center; gap: .5rem; }
 .theme-toggle {
   display: grid;
@@ -109,7 +106,6 @@ main {
   border-top: 1px solid var(--border);
   border-image: linear-gradient(90deg, transparent, var(--gold-line) 18%, var(--border) 68%, transparent) 1;
 }
-.anchor { position: absolute; top: 0; }
 .disclosure { margin: .65rem 0; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
 .disclosure > summary { display: flex; justify-content: space-between; align-items: center; gap: .9rem; cursor: pointer; list-style: none; padding: 1rem 1.2rem; border-radius: 10px; }
 .disclosure > summary::-webkit-details-marker { display: none; }
@@ -154,12 +150,30 @@ legend { color: var(--mint); font-weight: 700; }
 .result dt { color: #c3d3c9; font-size: .88rem; }
 .result dd { margin: 0; color: var(--mint); font-size: 1.25rem; font-weight: 720; font-variant-numeric: tabular-nums; }
 .result .error { color: #ffd3aa; }
-.checkbox { grid-template-columns: auto 1fr; align-items: start; padding: .55rem 0; }
-.checkbox input { accent-color: var(--mint); margin-top: .35rem; }
-.search-label { max-width: 28rem; }
 .chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
 .chip { border: 1px solid #476257; padding: .25rem .65rem; border-radius: 99px; text-decoration: none; font-size: .88rem; }
 .chip:hover { background: var(--raised); }
+.starting-points { gap: .7rem; }
+.starting-points .chip { min-height: 44px; display: inline-flex; align-items: center; gap: .6rem; padding: .45rem .85rem; background: var(--surface); }
+.starting-points .chip:hover { background: var(--raised); }
+.starting-points .chip span { color: var(--gold); }
+.field { position: relative; min-width: 0; }
+.field:has(.field-help) label { padding-right: 2rem; }
+.field label { margin-bottom: .3rem; }
+.field .field-help { position: absolute; top: 0; right: 0; width: 26px; min-height: 26px; }
+.field:has(.field-help[aria-expanded="true"]) { z-index: 2; }
+.health-plans fieldset { padding: 1rem; margin-bottom: 0; }
+.health-plans .field-grid { grid-template-columns: 1fr; }
+.comparison-table { overflow-x: auto; margin-bottom: 1rem; }
+.comparison-table table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.comparison-table th, .comparison-table td { padding: .55rem; border-bottom: 1px solid var(--border); text-align: left; }
+.comparison-table thead th { color: var(--gold); }
+.comparison-table tbody th { font-weight: 600; }
+.result > .button { margin: .65rem 0 0 .75rem; }
+@media (max-width: 550px) {
+  .comparison-table th, .comparison-table td { padding: .4rem .25rem; }
+  .result > .button { display: flex; width: fit-content; margin-left: 0; }
+}
 .rules small { display: block; color: var(--muted); }
 .source-links { font-size: .9rem; overflow-wrap: anywhere; }
 .contribute { display: flex; align-items: start; justify-content: space-between; gap: 1.3rem; }
@@ -175,8 +189,6 @@ footer { border-top: 1px solid var(--border); background: #0e1712; padding: 2.6r
   text-shadow: 0 0 .8em #e8bd7840;
 }
 .footer-inner .brand:hover { color: #f5d49e; }
-.design-credit { margin-bottom: 0; color: #b4a07a; font-size: .78rem; }
-.design-credit strong { font-weight: 600; }
 
 /* Glass is limited to navigation and cards. Inputs and help stay high contrast. */
 .route-card, .disclosure, .result {
@@ -263,8 +275,7 @@ footer { border-top: 1px solid var(--border); background: #0e1712; padding: 2.6r
   html { scroll-padding-top: 7rem; }
   .nav-row { flex-wrap: wrap; justify-content: space-between; gap: .45rem .5rem; padding: .63rem 0; }
   .nav-row nav { width: 100%; order: 3; justify-content: space-between; gap: .5rem; }
-  .nav-row nav a, .nav-action { font-size: .83rem; }
-  .nav-action { padding: .25rem .5rem; }
+  .nav-row nav a { font-size: .83rem; }
 }
 @media (max-width: 650px) {
   .wrap { width: calc(100% - 28px); }
@@ -281,7 +292,6 @@ footer { border-top: 1px solid var(--border); background: #0e1712; padding: 2.6r
   .contribute { flex-direction: column; }
 }
 @media (max-width: 360px) {
-  .nav-action span { display: none; }
   .nav-row .brand { gap: .35rem; font-size: 1rem; }
   .theme-toggle { width: 34px; }
 }
@@ -306,9 +316,8 @@ footer { border-top: 1px solid var(--border); background: #0e1712; padding: 2.6r
 [data-theme="light"] .route-card, [data-theme="light"] .disclosure { background: var(--surface); border-color: var(--border); }
 [data-theme="light"] .route-card:hover, [data-theme="light"] .disclosure[open] { border-color: var(--gold-line); }
 [data-theme="light"] .section-heading h2 { color: var(--ink); }
-[data-theme="light"] .nav-action:hover, [data-theme="light"] .footer-inner .brand:hover { color: #603c0d; }
+[data-theme="light"] .footer-inner .brand:hover { color: #603c0d; }
 [data-theme="light"] .footer-inner .brand { text-shadow: none; }
-[data-theme="light"] .design-credit { color: #6b593c; }
 [data-theme="light"] .example { background: #f4ecda; }
 [data-theme="light"] .action, [data-theme="light"] .result { background: #e8f1e6; }
 [data-theme="light"] .result { border-color: #819d8c; }
