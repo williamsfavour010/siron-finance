@@ -17,7 +17,7 @@ const currencies = ['USD','GBP','NGN','CAD','EUR','GHS','SEK'];
 const currencySelect = (label = 'Currency', current = 'USD', id = 'currency') => `<label>${label}<select name="${id}">${currencies.map(currency=>`<option${currency === current ? ' selected' : ''}>${currency}</option>`).join('')}</select></label>`;
 
 function fields(list) {
-  return `<div class="field-grid">${list.map(([id,label,value,min,max,step='any'])=>`<label>${html(label)}<input type="number" name="${id}" value="${value}" min="${min}" max="${max}" step="${step}"${id === 'gross' ? '' : ' required'}></label>`).join('')}</div>`;
+  return `<div class="field-grid">${list.map(([id,label,value,min,max,step='any',hint])=>`<label>${html(label)}<input type="number" name="${id}" value="${value}" min="${min}" max="${max}" step="${step}"${id === 'gross' ? '' : ' required'}${hint ? ` aria-describedby="hint-${id}"` : ''}></label>${hint ? `<small class="field-hint" id="hint-${id}">${html(hint)}</small>` : ''}`).map(field=>`<div class="field">${field}</div>`).join('')}</div>`;
 }
 
 function calculator(tool) {
@@ -28,9 +28,13 @@ function calculator(tool) {
   return `<details id="${tool.id}" class="disclosure calculator"><summary><span><strong>${html(tool.title)}</strong><small>${html(tool.summary)}</small></span></summary>
     <div class="detail-body">
       <p class="example">${html(tool.example)}</p>
-      <form data-tool="${tool.id}">
+      <form data-tool="${tool.id}" autocomplete="off" inert>
         <div class="currency-row">${tool.id === 'fx' ? currencySelect('Investment currency','NGN','localCurrency') + currencySelect('Goal currency') : currencySelect()}</div>
         ${body}
+        ${tool.advancedFields ? `<p class="note" data-quick-note>The quick estimate uses 7% yearly growth, 3% inflation, and a 0.25% annual fee. It leaves out taxes, other income, and extra expenses.</p>
+        <details class="advanced" data-advanced><summary>Fine-tune the estimate</summary>
+          <fieldset disabled aria-label="Advanced assumptions">${fields(tool.advancedFields)}</fieldset>
+        </details>` : ''}
         <p class="note">${html(tool.note)}</p>
         <div class="form-actions"><button class="button" type="submit">Calculate</button><button class="button secondary" type="reset">Reset example</button></div>
         <div class="result" role="status" aria-live="polite" hidden></div>
@@ -59,7 +63,7 @@ function playbook(code, country) {
   </div></details>`;
 }
 
-const checkup = `<form id="checkup-form"><div class="field-grid">${questions.map(([id,question,options])=>`<label>${html(question)}<select name="${id}" required><option value="">Choose an answer</option>${options.split('|').map(option=>{const [value,label]=option.split(':');return `<option value="${value}">${html(label)}</option>`;}).join('')}</select></label>`).join('')}</div>
+const checkup = `<form id="checkup-form" autocomplete="off" inert><div class="field-grid">${questions.map(([id,question,options])=>`<label>${html(question)}<select name="${id}" required><option value="">Choose an answer</option>${options.split('|').map(option=>{const [value,label]=option.split(':');return `<option value="${value}">${html(label)}</option>`;}).join('')}</select></label>`).join('')}</div>
 <div class="form-actions"><button type="submit" class="button">Show my starting points</button><button type="reset" class="button secondary">Reset</button></div><div class="result" role="status" aria-live="polite" hidden></div></form>`;
 
 const sourceMap = new Map();

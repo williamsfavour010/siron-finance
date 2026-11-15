@@ -102,6 +102,7 @@ function render(form, ...children) {
 function hideResult(form) {
   const result = form.querySelector('.result');
   if (activeHelp && result.contains(activeHelp.button)) closeHelp();
+  result.replaceChildren();
   result.hidden = true;
 }
 
@@ -110,6 +111,10 @@ function hideResult(form) {
 function readInputs(form) {
   const data = Object.fromEntries(new FormData(form));
   for (const field of form.querySelectorAll('input[type=number]')) {
+    if (field.matches(':disabled')) {
+      data[field.name] = Number(field.defaultValue);
+      continue;
+    }
     if (!field.validity.valid) throw new Error('Check the highlighted input.');
     const value = field.value === '' && !field.required ? 0 : field.valueAsNumber;
     if (!Number.isFinite(value)) throw new Error('Enter a finite number in each required field.');
@@ -123,6 +128,9 @@ const formatGap = (gap, money) => Math.abs(gap) < .005 ? 'On target in this mode
 
 const calculate = {
   goal(v, money) {
+    v.years = v.stopAge - v.age;
+    if (v.years < 1) throw new Error('Choose an age for work to become optional that is later than your current age.');
+    if (v.endAge <= v.stopAge) throw new Error('Choose a later age for how long you want your money to last.');
     const base = goalPlan(v);
     const lower = goalPlan({ ...v, returnRate: v.returnRate - 2 });
     const upper = goalPlan({ ...v, returnRate: v.returnRate + 2 });
@@ -240,10 +248,41 @@ due.addEventListener('submit', event => {
   else render(due, paragraph('You have checked all six prompts. Now test a total loss, a delayed exit and the cost of walking away. Keep the written evidence and get qualified advice when the structure calls for it.'));
 });
 
-for (const form of document.querySelectorAll('form')) {
-  form.addEventListener('reset', () => hideResult(form));
+const forms = document.querySelectorAll('form');
+for (const form of forms) {
+  const advanced = form.querySelector('[data-advanced]');
+  const assumptions = advanced?.querySelector('fieldset');
+  const quickNote = form.querySelector('[data-quick-note]');
+  advanced?.addEventListener('toggle', () => {
+    assumptions.disabled = !advanced.open;
+    quickNote.hidden = advanced.open;
+    hideResult(form);
+  });
+  form.addEventListener('reset', () => {
+    if (advanced) {
+      advanced.open = false;
+      assumptions.disabled = true;
+      quickNote.hidden = false;
+    }
+    hideResult(form);
+  });
   form.addEventListener('input', () => hideResult(form));
+  form.inert = false;
 }
+
+// Clear browser-restored form values when someone returns to a cached page.
+window.addEventListener('pagehide', () => forms.forEach(form => form.reset()));
+window.addEventListener('pageshow', () => forms.forEach(form => form.reset()));
+
+const themeToggle = document.querySelector('.theme-toggle');
+themeToggle.hidden = false;
+themeToggle.addEventListener('click', () => {
+  const light = document.documentElement.dataset.theme !== 'light';
+  document.documentElement.dataset.theme = light ? 'light' : 'dark';
+  themeToggle.setAttribute('aria-pressed', String(light));
+  themeToggle.querySelector('span').textContent = light ? '☾' : '☀';
+  document.querySelector('meta[name=theme-color]').content = light ? '#f5f2e8' : '#0b110f';
+});
 
 // A link to an expandable section opens it, including when shared directly.
 function openFragment(fragment) {
