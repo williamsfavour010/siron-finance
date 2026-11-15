@@ -20,6 +20,13 @@ function fields(list) {
   return `<div class="field-grid">${list.map(([id,label,value,min,max,step='any',hint])=>`<label>${html(label)}<input type="number" name="${id}" value="${value}" min="${min}" max="${max}" step="${step}"${id === 'gross' ? '' : ' required'}${hint ? ` aria-describedby="hint-${id}"` : ''}></label>${hint ? `<small class="field-hint" id="hint-${id}">${html(hint)}</small>` : ''}`).map(field=>`<div class="field">${field}</div>`).join('')}</div>`;
 }
 
+const monthlyClose = `<section class="monthly-close" id="workbook-downloads" aria-labelledby="monthly-close-title">
+  <h3 id="monthly-close-title">Close the month with the Queens analyst</h3>
+  <p>In this simplified month, the analyst brought home $5,900. Essentials went $70 over plan and flexible spending went $160 over, including a $35 renewal. With the other contributions unchanged, that left a $230 shortfall.</p>
+  <p>Open the plan and the tracker side by side. Compare the same categories, check the recurring charges, then pick one change for next month. To use a workbook yourself, open it in Google Sheets and use its File menu to download or make a copy if those options are available.</p>
+  <div class="pair">${workbookLinks.map(([title,description,url])=>`<div><h4>${html(title)}</h4><p>${html(description)}</p>${link('View example workbook ↗',url)}</div>`).join('')}</div>
+</section>`;
+
 function calculator(tool) {
   const insurance = tool.id === 'insurance';
   const body = insurance
@@ -40,6 +47,7 @@ function calculator(tool) {
         <div class="result" role="status" aria-live="polite" hidden></div>
       </form>
       ${links(tool.sources?.map(([label,url])=>({label,url})))}
+      ${tool.id === 'budget' ? monthlyClose : ''}
     </div>
   </details>`;
 }
@@ -80,7 +88,6 @@ const blocks = {
   COUNTRIES: Object.entries(countries).map(([code,country])=>playbook(code,country)).join('\n'),
   COUNTRY_LINKS: Object.entries(countries).map(([code,country])=>`<a class="chip" href="#country-${code}">${html(country.name)}</a>`).join(''),
   SOURCES: links(sources),
-  WORKBOOKS: workbookLinks.map(([title,description,url])=>`<div><h3>${html(title)}</h3><p>${html(description)}</p>${link('View example workbook ↗',url)}</div>`).join(''),
   DILIGENCE: diligence.map(prompt=>`<label class="checkbox"><input type="checkbox" name="checks" value="${html(prompt)}"><span>${html(prompt)}</span></label>`).join(''),
   CONTRIBUTE: html(contributionUrl),
 };
