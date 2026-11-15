@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A practical, self-guided financial decisions lab. Know your number, track your spending, and make a plan you can live with.">
   <meta name="theme-color" content="#0b110f">
+  <meta http-equiv="Content-Security-Policy" content="form-action 'none'">
   <title>Siron Finance</title>
   <link rel="icon" href="assets/siron-deer.png?v=fire" type="image/png">
-  <link rel="stylesheet" href="assets/site.css?v=quiet-credit">
-  <script type="module" src="scripts/app.mjs?v=champagne"></script>
+  <link rel="stylesheet" href="assets/site.css?v=quick-estimate">
+  <script type="module" src="scripts/app.mjs?v=quick-estimate"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -18,12 +19,16 @@
       <nav aria-label="Main navigation">
         <a href="#start">Start here</a><a href="#tools">Tools</a><a href="#learn">Learn</a><a href="#countries">Countries</a>
       </nav>
-      <a class="nav-action" href="#checkup">Take the checkup <span aria-hidden="true">↗</span></a>
+      <div class="nav-controls">
+        <a class="nav-action" href="#checkup">Take the checkup <span aria-hidden="true">↗</span></a>
+        <button class="theme-toggle" type="button" aria-label="Light mode" aria-pressed="false" hidden><span aria-hidden="true">☀</span></button>
+      </div>
     </div>
   </header>
   <main id="main">
     <div class="wrap">
       <noscript><p class="note">The guides and workbooks are available below. Enable JavaScript to use the calculators and checkup.</p></noscript>
+      <p class="privacy-note">Your answers and results stay in this tab. We never send or save them to a server or database. Refresh or close the page to clear them.</p>
       <header class="hero" id="top">
         <img class="hero-image" src="assets/uli-atrium.webp" alt="" width="1280" height="853" fetchpriority="high">
         <div class="hero-copy">
@@ -60,7 +65,7 @@
             </div>
           </details>
           <details class="disclosure" id="next-dollar"><summary><span><strong>Where should the next dollar go?</strong><small>Compare the next moves before you commit.</small></span></summary>
-            <div class="detail-body"><form id="next-form">
+            <div class="detail-body"><form id="next-form" autocomplete="off" inert>
               <div class="field-grid">
                 <label>Can you cover essentials and minimum payments this month?<select name="bills"><option value="yes">Yes</option><option value="no">No or unsure</option></select></label>
                 <label>Do you have a small accessible reserve?<select name="buffer"><option value="yes">Yes</option><option value="no">No or unsure</option></select></label>
@@ -76,7 +81,7 @@
           <!-- INSERT: TOOLS -->
           <details class="disclosure" id="diligence"><summary><span><strong>Stress-test a private deal</strong><small>Find the questions an attractive return can hide.</small></span></summary>
             <div class="detail-body"><p>Imagine a friend offers a fixed return on a property project. Start with who owes you the money, what is pledged, and who gets paid before you. Check only what you have independently verified.</p>
-              <form id="diligence-form"><!-- INSERT: DILIGENCE -->
+              <form id="diligence-form" autocomplete="off" inert><!-- INSERT: DILIGENCE -->
                 <div class="form-actions"><button class="button">Show unanswered questions</button><button class="button secondary" type="reset">Reset</button></div><div class="result" role="status" aria-live="polite" hidden></div>
               </form>
               <p class="note">Someone you trust can still offer a deal that is too concentrated, illiquid, or hard to enforce. Run a total-loss case and decide what happens to your other goals.</p>

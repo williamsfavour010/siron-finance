@@ -28,7 +28,7 @@ node --test tests/*.test.mjs
 python -m http.server 8000
 ```
 
-Open http://localhost:8000/ in your browser. Use a local HTTP server so the browser can load JavaScript modules. The formulas run on the visitor's device. Inputs are held in page memory and are cleared on reload. The site has no accounts, analytics or bank connection. Workbook views and the contribution form are hosted by Google.
+Open http://localhost:8000/ in your browser. Use a local HTTP server so the browser can load JavaScript modules. Calculator and checkup forms run in memory in `scripts/app.mjs` and use the formulas in `scripts/math.mjs`. The app clears answers and results when the page is reloaded or restored. The site blocks native form submissions with its Content Security Policy. The app has no database, browser storage, analytics or bank connection. Workbook views and the contribution form are hosted by Google.
 
 ## Review and publish
 

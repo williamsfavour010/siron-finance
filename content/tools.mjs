@@ -1,16 +1,26 @@
-// Each field is [id, label, example value, minimum, maximum, step].
+// Each field is [id, label, example value, minimum, maximum, step, optional hint].
 // Change example inputs here. Calculation formulas are in scripts/math.mjs.
 export const tools = [
   {
     id: 'goal', title: 'Know your number', summary: 'What would it take for work to become optional?',
-    example: 'Say you are 23, want the option to stop working at 40, and want to plan through 100. Start with what a year of the life you want costs today. Then try adding 18 years of extra family costs and see what changes.',
-    note: 'All amounts are in today’s purchasing power. Contributions arrive at month-end and keep pace with inflation. The retirement model spends at year-end, with extra costs starting in the first retirement year. Tax is a manual annual estimate. The three paths use a constant base return and returns two percentage points either side of it.',
+    example: 'What would it take to make work a choice? Try the example numbers, then swap in your own.',
+    note: 'The estimate uses today’s prices. It assumes your savings rise with inflation, with deposits at the end of each month and withdrawals at the end of each year. Extra costs start in your first year after work.',
     fields: [
-      ['age','Your age',23,18,99,1], ['years','Years until work is optional',17,1,80,1], ['endAge','Plan through age',100,19,125,1],
-      ['spending','Annual lifestyle spending',48000,0,1e10], ['tax','Annual tax paid from your withdrawals',0,0,1e10], ['otherIncome','Annual reliable income during retirement',0,0,1e10],
-      ['phaseCost','Extra annual costs in the first phase',12000,0,1e10], ['phaseYears','Years of extra costs',18,0,100,1],
-      ['start','Already set aside',10000,0,1e10], ['monthly','Current monthly contribution',650,0,1e9],
-      ['returnRate','Assumed annual return (%)',7,-20,35], ['inflation','Annual inflation (%)',3,-5,50], ['fee','Annual investment fee (%)',0.25,0,10],
+      ['age','How old are you now?',23,18,99,1],
+      ['stopAge','When would you like work to be optional? (age)',40,19,124,1],
+      ['endAge','How old might you live to?',100,20,125,1,'Pick an age you want your money to last through. Example: 100.'],
+      ['spending','What does a year of your life cost today?',48000,0,1e10],
+      ['start','How much have you already saved for this?',10000,0,1e10],
+      ['monthly','How much are you putting away each month?',650,0,1e9],
+    ],
+    advancedFields: [
+      ['tax','Yearly tax you expect to pay on withdrawals',0,0,1e10],
+      ['otherIncome','Yearly income you can count on after work',0,0,1e10],
+      ['phaseCost','Extra spending per year right after work',0,0,1e10,'Think childcare, family support, or other temporary expenses.'],
+      ['phaseYears','How many years will those extra costs last?',0,0,100,1],
+      ['returnRate','How much might your investments grow each year? (%)',7,-20,35],
+      ['inflation','How much might prices rise each year? (%)',3,-5,50],
+      ['fee','What do you pay in investment fees each year? (%)',0.25,0,10],
     ],
     sources: [['Investor.gov compound calculator','https://www.investor.gov/financial-tools-calculators/calculators/compound-interest-calculator']],
   },
